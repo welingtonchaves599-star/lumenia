@@ -1,4 +1,17 @@
-import React, { useState } from 'react';
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        
+        import React, { useState } from 'react';
 import { Mail, User, TrendingUp, Upload, BarChart3, Settings, Camera, CheckCircle, TrendingDown } from 'lucide-react';
 
 const SistemaCompleto = () => {
@@ -597,3 +610,10 @@ const BotAnaliseCompleto = ({ usuario, onLogout }) => {
 };
 
 export default SistemaCompleto;
+        // (Aquele que começa com 'const SistemaCompleto...')
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SistemaCompleto />);
+    </script>
+</body>
+</html>
