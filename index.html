@@ -3,254 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA Trading Bot - Lumenia</title>
+    <title>LUMENIA IA - Trading Bot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        .bg-lumenia { 
-            background: linear-gradient(180deg, #000000 0%, #b45309 50%, #000000 100%);
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #000; margin: 0; }
+        .bg-lumenia {
+            background: radial-gradient(circle at center, #b45309 0%, #000000 100%);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        .glass-card { 
-            background: rgba(15, 10, 5, 0.95); 
-            border: 1px solid #92400e; 
-            border-radius: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        .card {
+            background: rgba(15, 10, 5, 0.98);
+            border: 1px solid #92400e;
+            border-radius: 2.5rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
-        .btn-gold { 
-            background: linear-gradient(to right, #facc15, #fbbf24); 
-            color: #000; font-weight: 800; border-radius: 1rem; transition: all 0.3s;
+        .btn-gold {
+            background: #facc15;
+            color: #000;
+            font-weight: 900;
+            padding: 1.2rem;
+            border-radius: 1.2rem;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            text-transform: uppercase;
         }
-        .btn-gold:hover { transform: scale(1.02); filter: brightness(1.1); }
-        .input-lumenia {
-            background: rgba(0,0,0,0.6); border: 1px solid #78350f; border-radius: 1rem;
-            padding: 1rem; color: #fbbf24; outline: none; text-align: center;
+        .input-box {
+            background: #000;
+            border: 1px solid #78350f;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            width: 100%;
+            color: #fff;
+            margin-top: 10px;
+            outline: none;
+            text-align: center;
         }
-        @keyframes pulse-gold { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .animate-pulse-gold { animation: pulse-gold 2s infinite; }
+        .hidden { display: none; }
+        .result-card {
+            background: rgba(20, 10, 5, 0.95);
+            border: 1px solid #78350f;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <div id="screen-login" class="bg-lumenia">
+        <div class="card">
+            <div style="background:#facc15; width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                <i data-lucide="trending-up" style="color:#00; width:40px; height:40px;"></i>
+            </div>
+            <h1 style="color:#facc15; font-size:2.5rem; font-weight:900; margin:0;">LUMENIA IA</h1>
+            <div style="margin-top:30px; text-align:left;">
+                <label style="color:#facc15; font-size:0.8rem; font-weight:bold; margin-left:5px;">Seu Nome</label>
+                <input type="text" id="username" placeholder="Digite seu nome" class="input-box">
+            </div>
+            <button onclick="goToWelcome()" class="btn-gold">Entrar no Bot</button>
+        </div>
+    </div>
 
-        const Icon = ({ name, className = "w-5 h-5" }) => {
-            useEffect(() => { lucide.createIcons(); }, []);
-            return <i data-lucide={name} className={className}></i>;
-        };
+    <div id="screen-welcome" class="bg-lumenia hidden">
+        <div class="card">
+            <div style="background:#facc15; width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+                <i data-lucide="trending-up" style="color:#00; width:40px; height:40px;"></i>
+            </div>
+            <h2 style="color:#facc15; font-size:2rem; font-weight:900;">Bem-vindo!</h2>
+            <p id="display-name" style="font-size:1.5rem; font-weight:bold; margin:10px 0;"></p>
+            <div style="border:1px solid #22c55e; background:rgba(34,197,94,0.1); padding:15px; border-radius:1rem; color:#22c55e; font-weight:bold; margin:20px 0;">
+                Login realizado com sucesso!
+            </div>
+            <button onclick="goToBot()" class="btn-gold">Acessar Bot de Analise</button>
+        </div>
+    </div>
 
-        const App = () => {
-            const [view, setView] = useState('login'); // login, welcome, bot, analysis
-            const [loading, setLoading] = useState(false);
-            const [user, setUser] = useState({ nome: '', email: '' });
-            const [images, setImages] = useState([null, null]);
+    <div id="screen-bot" class="bg-lumenia hidden" style="justify-content: flex-start; padding-top:40px;">
+        <div style="width:100%; max-width:400px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.5); padding:15px; border-radius:2rem; border:1px solid #78350f; margin-bottom:30px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="background:#facc15; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#000; font-weight:900;">W</div>
+                    <span id="nav-name" style="color:#facc15; font-weight:bold;"></span>
+                </div>
+                <button onclick="location.reload()" style="background:#ef4444; color:#fff; border:none; padding:8px 15px; border-radius:1rem; font-weight:bold;">Sair</button>
+            </div>
 
-            const handleLogin = () => {
-                if(user.nome) setView('welcome');
-            };
+            <h2 style="font-size:2rem; font-weight:900; text-align:center;">IA Analise Avancada</h2>
+            <p style="color:#facc15; text-align:center; font-weight:bold; margin-bottom:20px;">Analise com 2 Fotos para Scalping</p>
+            
+            <div style="background:rgba(0,0,0,0.5); border:1px solid #78350f; padding:20px; border-radius:1.5rem; margin-bottom:20px;">
+                <p style="margin:0; font-weight:bold;">Progresso: <span id="prog-text">0/2</span> Fotos</p>
+                <div style="background:#000; height:8px; border-radius:4px; margin-top:10px; overflow:hidden;">
+                    <div id="prog-bar" style="background:#facc15; width:0%; height:100%; transition:0.3s;"></div>
+                </div>
+            </div>
 
-            const handleAnalyze = () => {
-                setLoading(true);
-                setTimeout(() => { setLoading(false); setView('analysis'); }, 3000);
-            };
+            <div id="upload-area" style="display:grid; gap:15px;">
+                <div onclick="fakeUpload(1)" class="card" style="max-width:100%; height:150px; border-style:dashed; display:flex; flex-direction:column; justify-content:center; padding:0;">
+                    <i data-lucide="upload" style="color:#facc15; margin:0 auto 10px;"></i>
+                    <span style="font-size:0.8rem; font-weight:bold;">Enviar Foto 1</span>
+                </div>
+                <div onclick="fakeUpload(2)" class="card" style="max-width:100%; height:150px; border-style:dashed; display:flex; flex-direction:column; justify-content:center; padding:0;">
+                    <i data-lucide="upload" style="color:#facc15; margin:0 auto 10px;"></i>
+                    <span style="font-size:0.8rem; font-weight:bold;">Enviar Foto 2</span>
+                </div>
+            </div>
 
-            const uploadImg = (i) => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.onchange = e => {
-                    const reader = new FileReader();
-                    reader.onload = ev => {
-                        const newImgs = [...images];
-                        newImgs[i] = ev.target.result;
-                        setImages(newImgs);
-                    };
-                    reader.readAsDataURL(e.target.files[0]);
-                };
-                input.click();
-            };
+            <button id="btn-analyze" onclick="showResults()" class="btn-gold hidden" style="margin-bottom:50px;">Analisar Graficos</button>
+        </div>
+    </div>
 
-            // TELA DE LOGIN (IGUAL AO PRINT)
-            if (view === 'login') return (
-                <div className="bg-lumenia flex items-center justify-center p-6">
-                    <div className="glass-card p-10 w-full max-w-sm text-center">
-                        <div className="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Icon name="trending-up" className="w-10 h-10 text-black" />
-                        </div>
-                        <h1 className="text-4xl font-black text-yellow-500 mb-2 tracking-tighter">IA Trading Bot</h1>
-                        <p className="text-yellow-100/60 mb-8 font-bold text-sm">Analise Profissional de Scalping</p>
-                        
-                        <div className="space-y-4 text-left">
-                            <label className="text-yellow-500 text-xs font-bold ml-1">Nome Completo</label>
-                            <input type="text" placeholder="Digite seu nome" className="w-full input-lumenia" onChange={e => setUser({...user, nome: e.target.value})} />
-                            
-                            <label className="text-yellow-500 text-xs font-bold ml-1">Email (Gmail)</label>
-                            <input type="email" placeholder="seuemail@gmail.com" className="w-full input-lumenia" />
-                        </div>
-                        
-                        <button onClick={handleLogin} className="btn-gold w-full py-4 mt-8 text-lg">Entrar no Bot</button>
+    <div id="screen-result" class="bg-lumenia hidden" style="justify-content: flex-start; padding-top:40px;">
+        <div style="width:100%; max-width:400px;">
+            <div class="result-card" style="border-color:#ef4444; background:rgba(239,68,68,0.05);">
+                <p style="color:#ef4444; font-weight:900; text-transform:uppercase; font-size:0.7rem;">Resistencia Identificada</p>
+                <h3 style="font-size:3rem; font-weight:900; margin:5px 0;">5769.50</h3>
+                <p style="color:#facc15; font-weight:bold;">Probabilidade: <span style="color:#fff;">72%</span></p>
+                <div style="background:#facc15; color:#000; display:inline-block; padding:5px 15px; border-radius:2rem; font-weight:900; font-size:0.7rem; margin-top:10px;">FORCA: MODERADA</div>
+            </div>
+
+            <div class="result-card" style="border-color:#ef4444;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                    <div style="width:10px; height:10px; background:#ef4444; border-radius:50%;"></div>
+                    <span style="color:#ef4444; font-weight:900; font-size:0.7rem; text-transform:uppercase;">Stop Loss - Protecao para Scalping</span>
+                </div>
+                <h3 style="font-size:2.5rem; font-weight:900; margin:0;">5768.80</h3>
+                <p style="color:rgba(255,255,255,0.4); font-size:0.6rem; font-weight:bold; margin:15px 0;">6 ALGORITMOS DE CALCULO:</p>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div style="background:#000; padding:10px; border-radius:0.8rem; border:1px solid rgba(239,68,68,0.2);">
+                        <p style="color:#ef4444; font-size:0.5rem; font-weight:bold; margin:0;">ATR</p>
+                        <p style="font-weight:bold; font-size:0.9rem;">5768.75</p>
+                    </div>
+                    <div style="background:#000; padding:10px; border-radius:0.8rem; border:1px solid rgba(239,68,68,0.2);">
+                        <p style="color:#ef4444; font-size:0.5rem; font-weight:bold; margin:0;">PERCENTUAL</p>
+                        <p style="font-weight:bold; font-size:0.9rem;">5768.77</p>
+                    </div>
+                    <div style="background:#000; padding:10px; border-radius:0.8rem; border:1px solid rgba(239,68,68,0.2);">
+                        <p style="color:#ef4444; font-size:0.5rem; font-weight:bold; margin:0;">SUPORTE/RESIST</p>
+                        <p style="font-weight:bold; font-size:0.9rem;">5768.00</p>
+                    </div>
+                    <div style="background:#000; padding:10px; border-radius:0.8rem; border:1px solid rgba(239,68,68,0.2);">
+                        <p style="color:#ef4444; font-size:0.5rem; font-weight:bold; margin:0;">CANDLE ANTERIOR</p>
+                        <p style="font-weight:bold; font-size:0.9rem;">5769.00</p>
                     </div>
                 </div>
-            );
+            </div>
 
-            // TELA DE BEM-VINDO (IGUAL AO PRINT)
-            if (view === 'welcome') return (
-                <div className="bg-lumenia flex items-center justify-center p-6">
-                    <div className="glass-card p-12 w-full max-w-sm text-center">
-                        <div className="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Icon name="trending-up" className="w-10 h-10 text-black" />
-                        </div>
-                        <h2 className="text-4xl font-black text-yellow-500 mb-2">Bem-vindo!</h2>
-                        <p className="text-white text-xl font-bold mb-1">{user.nome}</p>
-                        <p className="text-yellow-500/60 text-sm mb-8">Login realizado com sucesso!</p>
-                        
-                        <div className="border-2 border-green-500/50 rounded-2xl p-4 mb-8 bg-green-900/20">
-                            <p className="text-green-400 font-bold">Login realizado com sucesso!</p>
-                        </div>
-                        
-                        <button onClick={() => setView('bot')} className="btn-gold w-full py-4 text-lg">Acessar Bot de Analise</button>
-                    </div>
-                </div>
-            );
+            <button onclick="location.reload()" class="btn-gold" style="margin-bottom:50px;">Nova Analise</button>
+        </div>
+    </div>
 
-            // TELA PRINCIPAL DO BOT (IGUAL AO PRINT)
-            if (view === 'bot') return (
-                <div className="bg-lumenia p-4">
-                    <div className="max-w-md mx-auto space-y-6">
-                        <div className="flex justify-between items-center bg-black/40 p-4 rounded-3xl border border-yellow-700/30">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black">
-                                    <Icon name="user" className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <p className="text-yellow-500 font-bold text-sm">{user.nome}</p>
-                                    <p className="text-xs text-white/40">Conectado</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-2">
-                                <button className="bg-zinc-800 p-2 rounded-xl text-yellow-500"><Icon name="settings" /></button>
-                                <button onClick={() => setView('login')} className="bg-red-600 px-4 py-2 rounded-xl text-white font-bold text-xs">Sair</button>
-                            </div>
-                        </div>
+    <script>
+        // Inicializa ícones
+        lucide.createIcons();
 
-                        <div className="text-center py-6">
-                            <Icon name="camera" className="w-12 h-12 text-yellow-500 mx-auto mb-2" />
-                            <h2 className="text-3xl font-black text-white">IA Analise Avancada</h2>
-                            <p className="text-yellow-500 font-bold">Analise com 2 Fotos para Scalping</p>
-                            <div className="mt-4 inline-block bg-yellow-900/30 border border-yellow-600/30 px-4 py-1 rounded-full text-xs text-yellow-500">
-                                Corretora: 🌐 Olymp Trade
-                            </div>
-                        </div>
+        let photosUploaded = 0;
 
-                        <div className="glass-card p-6">
-                            <p className="font-bold mb-2">Progresso: {images.filter(x=>x).length}/2 Fotos</p>
-                            <div className="w-full bg-black h-2 rounded-full overflow-hidden">
-                                <div className="bg-yellow-500 h-full transition-all duration-500" style={{width: images.filter(x=>x).length === 0 ? '0%' : images.filter(x=>x).length === 1 ? '50%' : '100%'}}></div>
-                            </div>
-                        </div>
+        function goToWelcome() {
+            const name = document.getElementById('username').value;
+            if(!name) return alert("Digite seu nome!");
+            document.getElementById('display-name').innerText = name;
+            document.getElementById('nav-name').innerText = name;
+            document.getElementById('screen-login').classList.add('hidden');
+            document.getElementById('screen-welcome').classList.remove('hidden');
+        }
 
-                        <div className="grid grid-cols-1 gap-4 text-center font-bold">
-                            {[0, 1].map(i => (
-                                <div key={i} onClick={() => uploadImg(i)} className="glass-card h-52 flex flex-col items-center justify-center border-dashed border-2 border-yellow-600/30 overflow-hidden cursor-pointer">
-                                    {images[i] ? <img src={images[i]} className="w-full h-full object-cover" /> : (
-                                        <>
-                                            <p className="mb-4">Foto {i+1}</p>
-                                            <Icon name="upload" className="w-10 h-10 text-yellow-500 mb-2" />
-                                            <p className="text-xs">Enviar Foto {i+1}</p>
-                                        </>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
+        function goToBot() {
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('screen-bot').classList.remove('hidden');
+        }
 
-                        {images[0] && images[1] && !loading && (
-                            <button onClick={handleAnalyze} className="btn-gold w-full py-6 text-xl shadow-2xl">Analisar Graficos</button>
-                        )}
+        function fakeUpload(id) {
+            photosUploaded++;
+            document.getElementById('prog-text').innerText = photosUploaded + "/2";
+            document.getElementById('prog-bar').style.width = (photosUploaded * 50) + "%";
+            
+            if(photosUploaded >= 2) {
+                document.getElementById('btn-analyze').classList.remove('hidden');
+            }
+        }
 
-                        {loading && (
-                            <div className="glass-card p-10 text-center border-yellow-500 animate-pulse">
-                                <Icon name="loader" className="w-12 h-12 text-yellow-500 mx-auto animate-spin mb-4" />
-                                <p className="text-yellow-500 font-black">PROCESSANDO IA...</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
-
-            // TELA DE RESULTADOS (IGUAL AOS PRINTS DE ANÁLISE)
-            if (view === 'analysis') return (
-                <div className="bg-lumenia p-4 pb-20">
-                    <div className="max-w-md mx-auto space-y-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <Icon name="bar-chart-3" className="text-yellow-500" />
-                            <h2 className="text-2xl font-black">Analise Completa</h2>
-                        </div>
-
-                        {/* Bloco Resistencia */}
-                        <div className="glass-card p-6 border-red-500/40 relative overflow-hidden bg-red-950/10">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <p className="text-xs font-black text-red-400 uppercase">Resistencia Identificada</p>
-                                    <p className="text-5xl font-black mt-2 tracking-tighter">5769.50</p>
-                                </div>
-                                <Icon name="trending-down" className="w-12 h-12 text-red-500 opacity-30" />
-                            </div>
-                            <div className="mt-4 flex gap-4">
-                                <p className="text-yellow-500 font-bold">Probabilidade: <span className="text-white">72%</span></p>
-                                <span className="bg-yellow-600/40 px-3 py-1 rounded-full text-[10px] font-black uppercase text-yellow-300">Força: Moderada</span>
-                            </div>
-                            <div className="mt-6 bg-black/60 p-4 rounded-2xl border border-yellow-700/20">
-                                <p className="text-yellow-500 text-[10px] font-black uppercase">Proximo Alvo</p>
-                                <p className="text-2xl font-black">5770.00</p>
-                            </div>
-                        </div>
-
-                        {/* Bloco Confirmação */}
-                        <div className="glass-card p-6 border-yellow-600/30">
-                            <div className="flex gap-4">
-                                <Icon name="check-circle" className="text-yellow-500 w-6 h-6" />
-                                <div>
-                                    <p className="text-yellow-500 font-black uppercase text-xs mb-2">Confirmacao com 2 Fotos</p>
-                                    <p className="text-sm text-yellow-100/80 leading-relaxed italic">Confirmacao parcial: momentum de alta forte + rompimento de resistencia, mas RSI sobrecomprado reduz confiabilidade para novas entradas curtas.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Bloco Stop Loss (FOTO 2) */}
-                        <div className="glass-card p-6 border-red-500/50 bg-red-950/20">
-                            <div className="flex items-center gap-2 mb-4">
-                                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                                <h3 className="text-red-400 font-black uppercase text-xs">Stop Loss - Protecao para Scalping</h3>
-                            </div>
-                            <div className="text-4xl font-black mb-6 tracking-tighter text-white">5768.80</div>
-                            <p className="text-red-500/60 text-[9px] font-black uppercase mb-4 tracking-widest">6 Algoritmos de Calculo</p>
-                            <div className="grid grid-cols-2 gap-3">
-                                {[
-                                    {l:'ATR', v:'5768.75'}, {l:'Percentual', v:'5768.77'},
-                                    {l:'Suporte/Resist', v:'5768.00'}, {l:'Candle Anterior', v:'5769.00'},
-                                    {l:'Fibonacci', v:'5768.50'}, {l:'Risco/Recomp', v:'5768.80'}
-                                ].map((it, idx) => (
-                                    <div key={idx} className="bg-red-900/20 border border-red-900/30 p-3 rounded-xl">
-                                        <p className="text-red-500 text-[8px] font-black uppercase">{it.l}</p>
-                                        <p className="font-bold text-xs">{it.v}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <button onClick={() => {setView('bot'); setImages([null,null])}} className="w-full btn-gold py-5 text-lg shadow-xl uppercase">Nova Analise</button>
-                    </div>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function showResults() {
+            document.getElementById('screen-bot').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+        }
     </script>
 </body>
 </html>
