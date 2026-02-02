@@ -3,68 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA Trading Bot - Lumenia</title>
+    <title>Lumenia - IA Trading Bot</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+        body { background-color: black; color: white; overflow-x: hidden; }
+    </style>
 </head>
-<body class="bg-black">
+<body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Seu componente de Login (Simplificado para funcionar via CDN)
-        const LoginPage = ({ onLogin }) => {
-            const [nome, setNome] = useState('');
-            const [email, setEmail] = useState('');
-
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-black via-amber-600 to-black flex items-center justify-center p-4">
-                    <div className="bg-black/90 rounded-3xl p-10 max-w-md w-full border-2 border-yellow-400/50 shadow-2xl">
-                        <h1 className="text-3xl font-bold text-yellow-400 mb-6 text-center">IA Trading Bot</h1>
-                        <div className="space-y-4">
-                            <input 
-                                type="text" 
-                                placeholder="Nome Completo" 
-                                className="w-full bg-black/70 text-white p-3 rounded-xl border border-yellow-400/30"
-                                onChange={(e) => setNome(e.target.value)}
-                            />
-                            <input 
-                                type="email" 
-                                placeholder="Email (Gmail)" 
-                                className="w-full bg-black/70 text-white p-3 rounded-xl border border-yellow-400/30"
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <button 
-                                onClick={() => onLogin({nome, email})}
-                                className="w-full bg-yellow-500 text-black font-bold py-4 rounded-xl hover:bg-yellow-400 transition-all"
-                            >
-                                Entrar no Bot
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
+        // Ícone Simulado
+        const Icon = ({ name, className }) => {
+            useEffect(() => { if (window.lucide) lucide.createIcons(); }, []);
+            return <i data-lucide={name} className={className}></i>;
         };
-
-        const BotPrincipal = ({ usuario, onLogout }) => (
-            <div className="min-h-screen bg-black text-white p-8 text-center">
-                <h1 className="text-yellow-400 text-3xl font-bold mb-4">Painel Lumenia</h1>
-                <p className="mb-8">Bem-vindo, {usuario.nome}!</p>
-                <div className="border-2 border-dashed border-yellow-500/50 p-12 rounded-2xl">
-                    <p>Área de Análise de Gráficos</p>
-                    <p className="text-sm text-gray-400 mt-2">(As funções de upload e IA precisam de uma chave de API ativa no código)</p>
-                </div>
-                <button onClick={onLogout} className="mt-8 text-red-500 underline">Sair</button>
-            </div>
-        );
 
         const App = () => {
             const [user, setUser] = useState(null);
-            return !user ? <LoginPage onLogin={setUser} /> : <BotPrincipal usuario={user} onLogout={() => setUser(null)} />;
+            const [page, setPage] = useState('login');
+            const [loading, setLoading] = useState(false);
+            const [analysis, setAnalysis] = useState(null);
+            const [previews, setPreviews] = useState([null, null]);
+
+            const handleLogin = (u) => { setUser(u); setPage('bot'); };
+
+            const simulateAnalysis = () => {
+                setLoading(true);
+                setTimeout(() => {
+                    setAnalysis({
+                        tipo: "SUPORTE",
+                        valor: "1.09432",
+                        probabilidade: "94%",
+                        forca_sinal: "FORTE",
+                        proximo_alvo: "1.09850",
+                        tendencia: "ALTA",
+                        analise_tecnica: "O preço tocou a região de suporte histórico com volume crescente. Padrão de reversão identificado no gráfico de 1min.",
+                        recomendacao: "COMPRA (CALL) para os próximos 2 minutos."
+                    });
+                    setLoading(false);
+                }, 5000); // 5 segundos de simulação
+            };
+
+            const handleUpload = (index) => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.onchange = (e) => {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const newPreviews = [...previews];
+                        newPreviews[index] = ev.target.result;
+                        setPreviews(newPreviews);
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                };
+                input.click();
+            };
+
+            if (!user) return (
+                <div className="min-h-screen bg-gradient-to-br from-black via-amber-600 to-black flex items-center justify-center p-4">
+                    <div className="bg-black/90 p-10 max-w-md w-full border-2 border-yellow-400/50 rounded-3xl shadow-2xl text-center">
+                        <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Icon name="trending-up" className="text-black w-8 h-8" />
+                        </div>
+                        <h1 className="text-3xl font-bold text-yellow-400 mb-6 text-white">LUMENIA IA</h1>
+                        <input id="name" type="text" placeholder="Seu Nome" className="w-full mb-4 p-4 rounded-xl bg-black border border-yellow-500 text-white" />
+                        <button onClick={() => handleLogin({nome: document.getElementById('name').value})} className="w-full bg-yellow-500 text-black font-bold py-4 rounded-xl hover:bg-yellow-400 transition-all">Entrar no Bot</button>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen bg-black p-4">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="flex justify-between items-center mb-8 bg-black/50 p-4 border border-yellow-500/30 rounded-2xl">
+                            <span className="text-yellow-400 font-bold">Usuário: {user.nome}</span>
+                            <button onClick={() => window.location.reload()} className="text-red-500 font-bold">Sair</button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                            {[0, 1].map(i => (
+                                <div key={i} onClick={() => handleUpload(i)} className="border-2 border-dashed border-yellow-500/50 h-64 rounded-2xl flex items-center justify-center cursor-pointer overflow-hidden bg-zinc-900 hover:border-yellow-400 transition-all">
+                                    {previews[i] ? <img src={previews[i]} className="w-full h-full object-cover" /> : <div className="text-center text-yellow-500"><Icon name="camera" className="mx-auto mb-2" /><span>Foto {i+1}</span></div>}
+                                </div>
+                            ))}
+                        </div>
+
+                        {previews[0] && previews[1] && !analysis && !loading && (
+                            <button onClick={simulateAnalysis} className="w-full bg-yellow-500 text-black font-bold py-4 rounded-xl text-xl shadow-lg shadow-yellow-500/20">ANALISAR AGORA</button>
+                        )}
+
+                        {loading && (
+                            <div className="text-center p-10 bg-zinc-900 rounded-2xl border border-yellow-500">
+                                <div className="animate-spin w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                                <p className="text-yellow-400 font-bold text-xl">IA PROCESSANDO DADOS...</p>
+                            </div>
+                        )}
+
+                        {analysis && (
+                            <div className="bg-zinc-900 border-2 border-yellow-500 rounded-2xl p-6 mt-4 animate-in fade-in">
+                                <h2 className="text-2xl font-bold text-yellow-400 mb-4 flex items-center gap-2"><Icon name="bar-chart-3" /> RESULTADO DA IA</h2>
+                                <div className="grid grid-cols-2 gap-4 mb-4">
+                                    <div className="bg-black p-4 rounded-xl border border-yellow-500/30">
+                                        <p className="text-xs text-yellow-500">TIPO</p>
+                                        <p className="text-xl font-bold">{analysis.tipo}</p>
+                                    </div>
+                                    <div className="bg-black p-4 rounded-xl border border-yellow-500/30">
+                                        <p className="text-xs text-yellow-500">PROBABILIDADE</p>
+                                        <p className="text-xl font-bold text-green-400">{analysis.probabilidade}</p>
+                                    </div>
+                                </div>
+                                <div className="bg-black p-4 rounded-xl mb-4 border border-yellow-500/30">
+                                    <p className="text-xs text-yellow-500">RECOMENDAÇÃO</p>
+                                    <p className="text-lg font-bold">{analysis.recomendacao}</p>
+                                </div>
+                                <p className="text-sm text-gray-400">{analysis.analise_tecnica}</p>
+                                <button onClick={() => setAnalysis(null)} className="w-full mt-6 bg-zinc-800 py-3 rounded-lg text-yellow-500 font-bold border border-yellow-500/50">NOVA ANÁLISE</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
         };
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -72,4 +139,3 @@
     </script>
 </body>
 </html>
-
