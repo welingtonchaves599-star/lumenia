@@ -4,228 +4,187 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUMENIA IA</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        /* CSS REFEITO PARA SER IDENTICO AOS PRINTS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         
-        /* O FUNDO LARANJA IDÊNTICO AO PRINT */
         body { 
             background: #000; 
-            background: linear-gradient(180deg, #000000 0%, #cc7a00 50%, #000000 100%);
+            /* O degradê "Sunset" das fotos */
+            background: radial-gradient(circle at center, #92400e 0%, #000000 100%);
             background-attachment: fixed;
             color: white; 
-            min-height: 100vh;
-            display: flex;
+            display: flex; 
             justify-content: center;
+            min-height: 100vh;
         }
 
-        .app-container { width: 100%; max-width: 420px; padding: 20px; text-align: center; }
+        .container { width: 100%; max-width: 400px; padding: 20px; }
 
-        /* CARDS ESCUROS COM BORDA DOURADA */
+        /* Card escuro com borda marrom/dourada */
         .glass-card {
-            background: rgba(15, 15, 15, 0.95);
-            border: 1px solid #92400e;
-            border-radius: 2rem;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: rgba(10, 10, 10, 0.98);
+            border: 1px solid #78350f;
+            border-radius: 2.5rem;
+            padding: 35px 25px;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        /* BOTÃO AMARELO VIBRANTE */
-        .btn-gold {
-            background: linear-gradient(180deg, #facc15 0%, #eab308 100%);
+        /* Botão Amarelo idêntico ao do Welington */
+        .btn-lumenia {
+            background: #facc15;
             color: #000;
             font-weight: 800;
-            padding: 18px;
-            border-radius: 1.2rem;
+            padding: 20px;
+            border-radius: 1.5rem;
             width: 100%;
             border: none;
             cursor: pointer;
             font-size: 1.1rem;
-            text-transform: none;
-            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);
         }
 
-        .input-field {
-            background: #000;
-            border: 1px solid #eab308;
-            border-radius: 1rem;
-            padding: 15px;
+        .input-lumenia {
+            background: transparent;
+            border: 1px solid #78350f;
+            border-radius: 1.2rem;
+            padding: 18px;
             width: 100%;
             color: #fff;
-            margin-top: 8px;
+            margin-top: 10px;
             text-align: center;
+            font-size: 1rem;
             outline: none;
         }
 
-        /* HEADER DO USUÁRIO */
+        /* Dashboard Header */
         .user-header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.7);
-            padding: 12px 18px;
-            border-radius: 2.5rem;
-            border: 1px solid #92400e;
-            margin: 10px 0 30px 0;
+            background: rgba(0,0,0,0.6);
+            padding: 15px 20px;
+            border-radius: 3rem;
+            border: 1px solid #78350f;
+            margin: 20px 0;
         }
 
-        .status-badge {
-            background: #facc15;
-            color: #000;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-        }
+        .avatar { background: #facc15; color: #000; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; }
 
-        /* ÁREA DE UPLOAD TRACEJADA */
-        .upload-box {
-            border: 2px dashed #eab308;
-            background: rgba(20, 20, 20, 0.5);
-            border-radius: 1.5rem;
+        .btn-sair { background: #ef4444; color: white; border: none; padding: 8px 18px; border-radius: 1rem; font-weight: bold; font-size: 0.8rem; }
+
+        /* Área de Upload */
+        .upload-slot {
+            border: 2px dashed #78350f;
+            border-radius: 2rem;
             padding: 30px;
-            margin-top: 15px;
-            cursor: pointer;
+            margin: 15px 0;
+            background: rgba(15,15,15,0.4);
+            text-align: center;
         }
 
-        .progress-bar {
-            background: #111;
-            height: 10px;
-            border-radius: 10px;
-            margin-top: 10px;
-            overflow: hidden;
-            border: 1px solid #333;
-        }
-
-        .progress-fill {
-            background: #facc15;
-            width: 0%;
-            height: 100%;
-            transition: 0.5s;
-        }
-
+        /* Telas */
         .hidden { display: none; }
-        
-        /* GRID RESULTADOS */
-        .grid-stop { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .stop-item { background: #080808; border: 1px solid #ef444444; padding: 12px; border-radius: 1rem; text-align: left; }
+
+        /* Resultado Stop Loss */
+        .result-box { border: 1px solid #ef4444; border-radius: 2rem; padding: 25px; margin-bottom: 15px; text-align: left; background: rgba(239, 68, 68, 0.02); }
+        .grid-6 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .box-6 { background: #000; border: 1px solid rgba(239,68,68,0.2); padding: 12px; border-radius: 1rem; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-
-    <div id="step-1">
-        <div style="background:#facc15; width:85px; height:85px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin: 60px auto 20px;">
-            <i data-lucide="trending-up" style="color:#000; width:45px; height:45px;"></i>
-        </div>
-        <h1 style="font-size: 2.5rem; font-weight: 900; color: #facc15; margin-bottom: 40px;">LUMENIA IA</h1>
-        
+<div class="container">
+    <div id="screen1">
+        <div style="background:#facc15; width:80px; height:80px; border-radius:50%; margin: 60px auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px;">📈</div>
+        <h1 style="color: #facc15; font-size: 2.3rem; font-weight: 900; text-align: center;">LUMENIA IA</h1>
         <div class="glass-card">
-            <p style="text-align: left; color: #facc15; font-weight: bold; font-size: 0.9rem;">Seu Nome</p>
-            <input type="text" id="nameInput" placeholder="Digite seu nome" class="input-field">
-            <button onclick="toStep2()" class="btn-gold" style="margin-top: 25px;">Entrar no Bot</button>
+            <p style="text-align:left; color:#facc15; font-weight:bold; font-size: 0.9rem; margin-left: 5px;">Seu Nome</p>
+            <input type="text" id="username" placeholder="Digite seu nome" class="input-lumenia">
+            <button onclick="goStep2()" class="btn-lumenia">Entrar no Bot</button>
         </div>
     </div>
 
-    <div id="step-2" class="hidden">
+    <div id="screen2" class="hidden">
         <div class="user-header">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <div class="status-badge">W</div>
-                <div style="text-align: left;">
-                    <p id="userNameDisplay" style="color:#facc15; font-weight:bold; font-size: 0.9rem;">Welington</p>
-                    <p style="color:#666; font-size: 0.7rem;">hianleite19@gmail.com</p>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="avatar">W</div>
+                <div style="text-align:left;">
+                    <p id="display-user" style="color:#facc15; font-weight:bold;"></p>
+                    <p style="font-size: 0.7rem; opacity: 0.5;">hianleite19@gmail.com</p>
                 </div>
             </div>
-            <button onclick="location.reload()" style="background:#ef4444; color:white; border:none; padding:8px 15px; border-radius:1rem; font-weight:bold;">Sair</button>
+            <button onclick="location.reload()" class="btn-sair">Sair</button>
         </div>
 
-        <h2 style="font-size: 2.2rem; font-weight: 900; margin-bottom: 5px;">IA Analise Avancada</h2>
-        <p style="color: #facc15; font-weight: bold; margin-bottom: 25px;">Analise com 2 Fotos para Scalping</p>
-        
+        <h2 style="font-size: 2rem; font-weight: 900; text-align: center;">IA Analise Avancada</h2>
+        <p style="color:#facc15; font-weight:bold; text-align: center; margin-bottom: 20px;">Analise com 2 Fotos para Scalping</p>
+
         <div class="glass-card" style="padding: 20px;">
-            <p style="text-align:left; font-weight:bold; font-size: 0.9rem;">Progresso: <span id="txtProg">0/2 Fotos</span></p>
-            <div class="progress-bar"><div id="barProg" class="progress-fill"></div></div>
-        </div>
-
-        <div class="glass-card" style="padding: 15px;">
-            <p style="font-weight: bold; margin-bottom: 10px;">Foto 1</p>
-            <div class="upload-box" onclick="simulateUpload()">
-                <i data-lucide="upload" style="color:#facc15; margin-bottom: 10px;"></i>
-                <p style="font-size: 0.8rem; font-weight: bold;">Enviar Foto 1</p>
+            <p style="text-align:left; font-weight:bold; font-size: 0.9rem;">Progresso: <span id="prog-txt">0/2 Fotos</span></p>
+            <div style="background:#111; height:10px; border-radius:10px; margin-top:10px; overflow:hidden;">
+                <div id="prog-bar" style="background:#facc15; width:0%; height:100%; transition: 0.4s;"></div>
             </div>
         </div>
 
-        <div class="glass-card" style="padding: 15px;">
-            <p style="font-weight: bold; margin-bottom: 10px;">Foto 2</p>
-            <div class="upload-box" onclick="simulateUpload()">
-                <i data-lucide="upload" style="color:#facc15; margin-bottom: 10px;"></i>
-                <p style="font-size: 0.8rem; font-weight: bold;">Enviar Foto 2</p>
-            </div>
+        <div class="upload-slot" onclick="doUp()">
+            <p style="font-size: 25px;">📤</p>
+            <p style="font-weight:bold; margin-top:10px;">Enviar Foto 1</p>
         </div>
 
-        <button id="btnAnalise" onclick="toResult()" class="btn-gold hidden" style="margin-top: 10px; margin-bottom: 50px;">Analisar Gráficos</button>
+        <div class="upload-slot" onclick="doUp()">
+            <p style="font-size: 25px;">📤</p>
+            <p style="font-weight:bold; margin-top:10px;">Enviar Foto 2</p>
+        </div>
+
+        <button id="btn-ana" onclick="goStep3()" class="btn-lumenia hidden" style="margin-bottom: 40px;">Analisar Gráficos</button>
     </div>
 
-    <div id="step-3" class="hidden">
-        <div class="glass-card" style="border-color:#ef4444; text-align: left;">
+    <div id="screen3" class="hidden">
+        <div class="result-box">
             <p style="color:#ef4444; font-weight:900; font-size:0.7rem; text-transform:uppercase;">Resistencia Identificada</p>
             <h3 style="font-size:3.5rem; font-weight:900; margin:5px 0;">5769.50</h3>
             <p style="color:#facc15; font-weight:bold;">Probabilidade: <span style="color:#fff;">72%</span></p>
-            <div style="background:#facc15; color:#000; display:inline-block; padding:6px 20px; border-radius:2rem; font-weight:900; font-size:0.8rem; margin-top:15px;">FORCA: MODERADA</div>
+            <div style="background:#facc15; color:#000; display:inline-block; padding:6px 15px; border-radius:2rem; font-weight:900; font-size:0.7rem; margin-top:10px;">FORCA: MODERADA</div>
         </div>
 
-        <div class="glass-card" style="border-color:#ef4444; text-align: left;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
-                <div style="width:12px; height:12px; background:#ef4444; border-radius:50%; box-shadow: 0 0 10px #ef4444;"></div>
-                <span style="color:#ef4444; font-weight:900; font-size:0.8rem; text-transform:uppercase;">Stop Loss - Protecao Scalping</span>
-            </div>
-            <h3 style="font-size:3rem; font-weight:900;">5768.80</h3>
-            <p style="color:#555; font-size:0.7rem; font-weight:bold; margin:20px 0;">6 ALGORITMOS DE CALCULO:</p>
-            
-            <div class="grid-stop">
-                <div class="stop-item"><p style="color:#ef4444; font-size:0.6rem; font-weight:bold;">ATR</p><p style="font-weight:900;">5768.75</p></div>
-                <div class="stop-item"><p style="color:#ef4444; font-size:0.6rem; font-weight:bold;">PERCENTUAL</p><p style="font-weight:900;">5768.77</p></div>
-                <div class="stop-item"><p style="color:#ef4444; font-size:0.6rem; font-weight:bold;">SUPORTE</p><p style="font-weight:900;">5768.00</p></div>
-                <div class="stop-item"><p style="color:#ef4444; font-size:0.6rem; font-weight:bold;">CANDLE</p><p style="font-weight:900;">5769.00</p></div>
+        <div class="result-box">
+            <p style="color:#ef4444; font-weight:900; font-size:0.8rem;">🛑 STOP LOSS - PROTECAO</p>
+            <h3 style="font-size:2.8rem; font-weight:900; margin: 5px 0;">5768.80</h3>
+            <div class="grid-6">
+                <div class="box-6"><p style="color:#ef4444; font-size:0.6rem; font-weight:bold;">ATR</p><p style="font-weight:900;">5768.75</p></div>
+                <div class="box-6"><p style="color:#ef4444; font-size:0.6rem; font-weight:bold;">PERCENTUAL</p><p style="font-weight:900;">5768.77</p></div>
+                <div class="box-6"><p style="color:#ef4444; font-size:0.6rem; font-weight:bold;">SUPORTE</p><p style="font-weight:900;">5768.00</p></div>
+                <div class="box-6"><p style="color:#ef4444; font-size:0.6rem; font-weight:bold;">CANDLE</p><p style="font-weight:900;">5769.00</p></div>
             </div>
         </div>
-        <button onclick="location.reload()" class="btn-gold">Nova Analise</button>
+        <button onclick="location.reload()" class="btn-lumenia" style="margin-bottom: 50px;">Nova Analise</button>
     </div>
-
 </div>
 
 <script>
-    // Inicia os ícones do Lucide
-    lucide.createIcons();
-    let uploads = 0;
-
-    function toStep2() {
-        const name = document.getElementById('nameInput').value;
-        if(!name) return alert("Por favor, digite seu nome.");
-        document.getElementById('userNameDisplay').innerText = name;
-        document.getElementById('step-1').classList.add('hidden');
-        document.getElementById('step-2').classList.remove('hidden');
+    let f = 0;
+    function goStep2() {
+        const n = document.getElementById('username').value;
+        if(!n) return;
+        document.getElementById('display-user').innerText = n;
+        document.getElementById('screen1').classList.add('hidden');
+        document.getElementById('screen2').classList.remove('hidden');
     }
-
-    function simulateUpload() {
-        if(uploads < 2) {
-            uploads++;
-            document.getElementById('txtProg').innerText = uploads + "/2 Fotos";
-            document.getElementById('barProg').style.width = (uploads * 50) + "%";
-            if(uploads === 2) document.getElementById('btnAnalise').classList.remove('hidden');
+    function doUp() {
+        if(f < 2) {
+            f++;
+            document.getElementById('prog-txt').innerText = f + "/2 Fotos";
+            document.getElementById('prog-bar').style.width = (f * 50) + "%";
+            if(f === 2) document.getElementById('btn-ana').classList.remove('hidden');
         }
     }
-
-    function toResult() {
-        document.getElementById('step-2').classList.add('hidden');
-        document.getElementById('step-3').classList.remove('hidden');
-        lucide.createIcons(); // Recarrega ícones na tela nova
+    function goStep3() {
+        document.getElementById('screen2').classList.add('hidden');
+        document.getElementById('screen3').classList.remove('hidden');
     }
 </script>
 </body>
