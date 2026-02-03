@@ -1,643 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA Trading Bot - Análise Profissional de Scalping</title>
-    
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React e ReactDOM via CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel Standalone para JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-        
-        .icon {
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-            vertical-align: -0.125em;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>IA Trading Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState } = React;
+<body class="min-h-screen bg-gradient-to-br from-black via-amber-600 to-black text-white">
 
-        // Ícones SVG
-        const Mail = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-        );
+<!-- LOGIN -->
+<div id="login" class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-black/90 rounded-3xl p-10 max-w-md w-full border-2 border-yellow-400/50">
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="trending-up" class="w-10 h-10 text-black"></i>
+      </div>
+      <h1 class="text-3xl font-bold text-yellow-400">IA Trading Bot</h1>
+      <p class="text-yellow-100">Análise Profissional de Scalping</p>
+    </div>
 
-        const User = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-        );
+    <input id="nome" placeholder="Nome completo"
+      class="w-full mb-4 bg-black/70 text-yellow-100 rounded-xl p-3 border border-yellow-400/30">
 
-        const TrendingUp = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-        );
+    <input id="email" placeholder="Email"
+      class="w-full mb-6 bg-black/70 text-yellow-100 rounded-xl p-3 border border-yellow-400/30">
 
-        const Upload = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-        );
+    <button onclick="login()"
+      class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold py-4 rounded-xl">
+      Entrar no Bot
+    </button>
+  </div>
+</div>
 
-        const BarChart3 = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-        );
+<!-- SISTEMA -->
+<div id="app" class="hidden max-w-6xl mx-auto p-4">
 
-        const Settings = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-        );
+  <!-- TOPO -->
+  <div class="bg-black/80 rounded-2xl p-4 mb-6 border border-yellow-400/50 flex justify-between">
+    <div>
+      <p id="userNome" class="text-yellow-400 font-bold"></p>
+      <p id="userEmail" class="text-yellow-300 text-sm"></p>
+    </div>
+    <button onclick="logout()" class="bg-red-600 px-4 py-2 rounded-lg font-bold">
+      Sair
+    </button>
+  </div>
 
-        const Camera = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-        );
+  <!-- UPLOAD -->
+  <div class="grid md:grid-cols-2 gap-4 mb-6">
+    <div class="bg-black/80 p-6 rounded-xl border border-yellow-400/50 text-center">
+      <p class="mb-2">Foto 1</p>
+      <input type="file" accept="image/*" onchange="preview(this,0)">
+      <img id="img0" class="mt-4 rounded hidden">
+    </div>
 
-        const CheckCircle = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-        );
+    <div class="bg-black/80 p-6 rounded-xl border border-yellow-400/50 text-center">
+      <p class="mb-2">Foto 2</p>
+      <input type="file" accept="image/*" onchange="preview(this,1)">
+      <img id="img1" class="mt-4 rounded hidden">
+    </div>
+  </div>
 
-        const TrendingDown = ({ className = "" }) => (
-            <svg className={`icon ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17H3v-6m0 0l8-8 4 4 6-6" />
-            </svg>
-        );
+  <!-- ANALISAR -->
+  <div class="text-center mb-6">
+    <button onclick="analisar()"
+      class="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold px-12 py-4 rounded-xl">
+      Analisar Gráficos
+    </button>
+  </div>
 
-        const SistemaCompleto = () => {
-            const [usuarioLogado, setUsuarioLogado] = useState(null);
+  <!-- RESULTADO -->
+  <div id="resultado" class="hidden bg-black/80 rounded-2xl p-8 border border-yellow-400/50">
+    <h2 class="text-3xl text-yellow-400 font-bold mb-4">Análise Completa</h2>
 
-            if (!usuarioLogado) {
-                return <LoginPage onLogin={setUsuarioLogado} />;
-            }
+    <div class="bg-green-900/40 border border-green-500 rounded-xl p-6 mb-4">
+      <p class="text-lg font-bold">SUPORTE IDENTIFICADO</p>
+      <p class="text-5xl font-bold">1.2345</p>
+      <p>Probabilidade: <strong>89%</strong></p>
+    </div>
 
-            return <BotAnaliseCompleto usuario={usuarioLogado} onLogout={() => setUsuarioLogado(null)} />;
-        };
+    <div class="bg-black/50 p-4 rounded border border-yellow-400/30 mb-4">
+      <p class="text-yellow-400">Recomendação</p>
+      <p>Entrada favorável após confirmação de candle.</p>
+    </div>
 
-        const LoginPage = ({ onLogin }) => {
-            const [nome, setNome] = useState('');
-            const [email, setEmail] = useState('');
-            const [mostrandoSucesso, setMostrandoSucesso] = useState(false);
+    <button onclick="novaAnalise()"
+      class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold py-3 rounded-lg">
+      Nova Análise
+    </button>
+  </div>
+</div>
 
-            const handleLogin = () => {
-                if (nome.trim() && email.trim() && email.includes('@')) {
-                    setMostrandoSucesso(true);
-                } else {
-                    alert('Por favor, preencha nome e email corretamente!');
-                }
-            };
+<script>
+  lucide.createIcons();
 
-            const acessarBot = () => {
-                onLogin({ nome, email });
-            };
+  function login() {
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
 
-            if (mostrandoSucesso) {
-                return (
-                    <div className="min-h-screen bg-gradient-to-br from-black via-amber-600 to-black flex items-center justify-center p-4">
-                        <div className="bg-black/90 backdrop-blur-sm rounded-3xl p-12 max-w-md w-full border-2 border-yellow-400/50 shadow-2xl text-center">
-                            <div className="mb-6">
-                                <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <TrendingUp className="w-10 h-10 text-black" />
-                                </div>
-                                <h2 className="text-3xl font-bold text-yellow-400 mb-2">Bem-vindo!</h2>
-                                <p className="text-yellow-100 text-lg">{nome}</p>
-                                <p className="text-yellow-300 text-sm mt-1">{email}</p>
-                            </div>
+    if (!nome || !email.includes('@')) {
+      alert('Preencha corretamente');
+      return;
+    }
 
-                            <div className="bg-green-900/30 border-2 border-green-500 rounded-xl p-4 mb-6">
-                                <p className="text-green-400 font-semibold">Login realizado com sucesso!</p>
-                            </div>
+    document.getElementById('login').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    document.getElementById('userNome').innerText = nome;
+    document.getElementById('userEmail').innerText = email;
+  }
 
-                            <button
-                                onClick={acessarBot}
-                                className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold text-lg py-4 rounded-xl transition-all shadow-lg transform hover:scale-105"
-                            >
-                                Acessar Bot de Analise
-                            </button>
-                        </div>
-                    </div>
-                );
-            }
+  function logout() {
+    location.reload();
+  }
 
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-black via-amber-600 to-black flex items-center justify-center p-4">
-                    <div className="bg-black/90 backdrop-blur-sm rounded-3xl p-10 max-w-md w-full border-2 border-yellow-400/50 shadow-2xl">
-                        <div className="text-center mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                                <TrendingUp className="w-10 h-10 text-black" />
-                            </div>
-                            <h1 className="text-3xl font-bold text-yellow-400 mb-2">IA Trading Bot</h1>
-                            <p className="text-yellow-100">Analise Profissional de Scalping</p>
-                        </div>
+  function preview(input, index) {
+    const img = document.getElementById('img' + index);
+    img.src = URL.createObjectURL(input.files[0]);
+    img.classList.remove('hidden');
+  }
 
-                        <div className="space-y-6">
-                            <div>
-                                <label className="block text-yellow-400 text-sm font-semibold mb-2">
-                                    Nome Completo
-                                </label>
-                                <div className="relative">
-                                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        value={nome}
-                                        onChange={(e) => setNome(e.target.value)}
-                                        placeholder="Digite seu nome"
-                                        className="w-full bg-black/70 text-yellow-100 rounded-xl pl-12 pr-4 py-3 border-2 border-yellow-400/30 focus:border-yellow-400 focus:outline-none placeholder-yellow-600 transition-all"
-                                    />
-                                </div>
-                            </div>
+  function analisar() {
+    document.getElementById('resultado').classList.remove('hidden');
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
 
-                            <div>
-                                <label className="block text-yellow-400 text-sm font-semibold mb-2">
-                                    Email (Gmail)
-                                </label>
-                                <div className="relative">
-                                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-400 w-5 h-5" />
-                                    <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="seuemail@gmail.com"
-                                        className="w-full bg-black/70 text-yellow-100 rounded-xl pl-12 pr-4 py-3 border-2 border-yellow-400/30 focus:border-yellow-400 focus:outline-none placeholder-yellow-600 transition-all"
-                                    />
-                                </div>
-                            </div>
+  function novaAnalise() {
+    document.getElementById('resultado').classList.add('hidden');
+  }
+</script>
 
-                            <button
-                                onClick={handleLogin}
-                                className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold text-lg py-4 rounded-xl transition-all shadow-lg transform hover:scale-105"
-                            >
-                                Entrar no Bot
-                            </button>
-                        </div>
-
-                        <div className="mt-8 space-y-3">
-                            <div className="flex items-center gap-3 bg-black/50 rounded-lg p-3 border border-yellow-400/20">
-                                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                                <p className="text-yellow-100 text-sm">Analise com 2 fotos sequenciais</p>
-                            </div>
-                            <div className="flex items-center gap-3 bg-black/50 rounded-lg p-3 border border-yellow-400/20">
-                                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                                <p className="text-yellow-100 text-sm">6 algoritmos de Stop Loss/Take Profit</p>
-                            </div>
-                            <div className="flex items-center gap-3 bg-black/50 rounded-lg p-3 border border-yellow-400/20">
-                                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                                <p className="text-yellow-100 text-sm">Probabilidade realista de acerto</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const BotAnaliseCompleto = ({ usuario, onLogout }) => {
-            const [showSettings, setShowSettings] = useState(false);
-            const [images, setImages] = useState([null, null]);
-            const [imagePreviews, setImagePreviews] = useState([null, null]);
-            const [loading, setLoading] = useState(false);
-            const [countdown, setCountdown] = useState(10);
-            const [analysis, setAnalysis] = useState(null);
-            const [precisao, setPrecisao] = useState('alta');
-            const [tipoAnalise, setTipoAnalise] = useState('automatico');
-            const [stopLoss, setStopLoss] = useState(true);
-            const [takeProfit, setTakeProfit] = useState(true);
-            const [timeframeDetect, setTimeframeDetect] = useState(true);
-            const [corretora, setCorretora] = useState('olymptrade');
-
-            const analyzeCharts = async () => {
-                setLoading(true);
-                setCountdown(10);
-
-                const timer = setInterval(() => {
-                    setCountdown(prev => prev <= 1 ? 0 : prev - 1);
-                }, 1000);
-
-                setTimeout(() => {
-                    const mockAnalysis = {
-                        tipo: "SUPORTE",
-                        valor: "4332.40",
-                        proximo_alvo: "4333.80",
-                        tendencia: "ALTA",
-                        preco_atual: "4332.41",
-                        probabilidade: "72%",
-                        padroes_identificados: ["Double Bottom", "Suporte Testado 3x"],
-                        analise_tecnica: "Padrão de suporte confirmado com múltiplas testagens. RSI em zona de sobrevenda com divergência bullish.",
-                        rsi_status: "Sobrevenda com divergência positiva",
-                        confirmacao_multipla: "Suporte em 4332.40 sendo testado, RSI mostrando divergência positiva, candles menores indicando indecisão. Falta confirmação de candle de reversão para entrada mais segura.",
-                        forca_sinal: "MODERADA",
-                        recomendacao: "Compra com risco controlado",
-                        timeframe: "30s",
-                        stop_loss_sugerido: "4331.90",
-                        stop_loss_algoritmos: {
-                            atr: "4331.85",
-                            percentual: "4331.95",
-                            suporte_resistencia: "4331.90",
-                            candle_anterior: "4332.00",
-                            fibonacci: "4331.80",
-                            risco_recompensa: "4331.88"
-                        },
-                        take_profit_sugerido: "4333.80",
-                        take_profit_algoritmos: {
-                            atr: "4333.95",
-                            percentual: "4333.85",
-                            suporte_resistencia: "4333.80",
-                            extensao_fibonacci: "4334.10",
-                            pivot_points: "4333.75",
-                            risco_recompensa: "4333.90"
-                        }
-                    };
-
-                    setAnalysis(mockAnalysis);
-                    setLoading(false);
-                    clearInterval(timer);
-                }, 10000);
-            };
-
-            const handleFileUpload = (event, index) => {
-                const file = event.target.files[0];
-                if (file && file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const newPreviews = [...imagePreviews];
-                        newPreviews[index] = e.target.result;
-                        setImagePreviews(newPreviews);
-                    };
-                    reader.readAsDataURL(file);
-
-                    const newImages = [...images];
-                    newImages[index] = file;
-                    setImages(newImages);
-                    setAnalysis(null);
-                }
-            };
-
-            const removeImage = (index) => {
-                const newImages = [...images];
-                const newPreviews = [...imagePreviews];
-                newImages[index] = null;
-                newPreviews[index] = null;
-                setImages(newImages);
-                setImagePreviews(newPreviews);
-                setAnalysis(null);
-            };
-
-            const uploadedCount = images.filter(img => img !== null).length;
-
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-black via-amber-600 to-black p-4">
-                    <div className="max-w-6xl mx-auto">
-
-                        <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-4 mb-6 border-2 border-yellow-400/50 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center">
-                                    <User className="w-6 h-6 text-black" />
-                                </div>
-                                <div>
-                                    <p className="text-yellow-400 font-bold">{usuario.nome}</p>
-                                    <p className="text-yellow-300 text-xs">{usuario.email}</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-3">
-                                <button
-                                    onClick={() => setShowSettings(!showSettings)}
-                                    className="bg-black/80 hover:bg-black/60 p-3 rounded-full transition-all border border-yellow-400/50"
-                                >
-                                    <Settings className="w-6 h-6 text-yellow-400" />
-                                </button>
-                                <button
-                                    onClick={onLogout}
-                                    className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-semibold transition-all"
-                                >
-                                    Sair
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="text-center mb-8">
-                            <div className="flex items-center justify-center gap-3 mb-4">
-                                <Camera className="w-12 h-12 text-yellow-400" />
-                                <h1 className="text-4xl font-bold text-yellow-100">IA Analise Avancada</h1>
-                            </div>
-                            <p className="text-yellow-200 text-lg mb-2">Analise com 2 Fotos para Scalping</p>
-                            <div className="inline-flex items-center gap-2 bg-yellow-900/40 border border-yellow-500/30 rounded-full px-6 py-2">
-                                <span className="text-yellow-100 font-semibold">
-                                    Corretora: {corretora === 'olymptrade' ? '🌐 Olymp Trade' : '📊 Home Broker'}
-                                </span>
-                            </div>
-                        </div>
-
-                        {showSettings && (
-                            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                                <div className="bg-black/90 rounded-2xl p-8 max-w-md w-full border-2 border-yellow-400/50 shadow-2xl">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <h2 className="text-2xl font-bold text-yellow-100">Configuracoes</h2>
-                                        <button onClick={() => setShowSettings(false)} className="text-white text-2xl">×</button>
-                                    </div>
-
-                                    <div className="space-y-4">
-                                        <div className="bg-black/70 rounded-lg p-4 border border-yellow-400/30">
-                                            <label className="block text-yellow-400 text-sm font-semibold mb-2">Corretora</label>
-                                            <select value={corretora} onChange={(e) => setCorretora(e.target.value)} className="w-full bg-black text-yellow-100 rounded-lg p-2 border border-yellow-400/50 focus:border-yellow-300 focus:outline-none">
-                                                <option value="olymptrade">Olymp Trade</option>
-                                                <option value="homebroker">Home Broker</option>
-                                            </select>
-                                        </div>
-
-                                        <div className="bg-black/70 rounded-lg p-4 border border-yellow-400/30">
-                                            <label className="block text-yellow-400 text-sm font-semibold mb-2">Precisao</label>
-                                            <select value={precisao} onChange={(e) => setPrecisao(e.target.value)} className="w-full bg-black text-yellow-100 rounded-lg p-2 border border-yellow-400/50">
-                                                <option value="alta">Alta (88-95%)</option>
-                                                <option value="media">Media (78-88%)</option>
-                                                <option value="conservadora">Conservadora (68-78%)</option>
-                                            </select>
-                                        </div>
-
-                                        <div className="bg-black/70 rounded-lg p-4 border border-yellow-400/30">
-                                            <label className="block text-yellow-400 text-sm font-semibold mb-2">Tipo</label>
-                                            <select value={tipoAnalise} onChange={(e) => setTipoAnalise(e.target.value)} className="w-full bg-black text-yellow-100 rounded-lg p-2 border border-yellow-400/50">
-                                                <option value="automatico">Automatico</option>
-                                                <option value="suporte">Apenas Suporte</option>
-                                                <option value="resistencia">Apenas Resistencia</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <button onClick={() => setShowSettings(false)} className="w-full mt-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold py-3 rounded-lg">
-                                        Salvar
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-yellow-400/50 mb-6">
-                            <h3 className="text-yellow-100 text-xl font-bold mb-4">Progresso: {uploadedCount}/2 Fotos</h3>
-                            <div className="w-full bg-black rounded-full h-3 border border-yellow-400/30">
-                                <div
-                                    className="bg-gradient-to-r from-yellow-400 to-amber-500 h-full transition-all duration-500 rounded-full"
-                                    style={{ width: `${(uploadedCount / 2) * 100}%` }}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            {[0, 1].map((index) => (
-                                <div key={index} className="bg-black/80 rounded-2xl p-6 border-2 border-yellow-400/50">
-                                    <div className="text-center mb-4">
-                                        <span className="text-yellow-300 font-bold">Foto {index + 1}</span>
-                                        {imagePreviews[index] && <CheckCircle className="inline w-5 h-5 text-green-400 ml-2" />}
-                                    </div>
-
-                                    {!imagePreviews[index] ? (
-                                        <label className="flex flex-col items-center justify-center border-2 border-dashed border-yellow-500/50 rounded-xl p-8 cursor-pointer hover:border-yellow-400 min-h-[200px]">
-                                            <Upload className="w-12 h-12 text-yellow-400 mb-3" />
-                                            <span className="text-yellow-100 font-semibold">Enviar Foto {index + 1}</span>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => handleFileUpload(e, index)}
-                                                className="hidden"
-                                            />
-                                        </label>
-                                    ) : (
-                                        <div className="relative">
-                                            <img src={imagePreviews[index]} alt="Grafico" className="w-full rounded-lg max-h-64 object-cover" />
-                                            <button
-                                                onClick={() => removeImage(index)}
-                                                className="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-
-                        {uploadedCount === 2 && !loading && !analysis && (
-                            <div className="text-center mb-6">
-                                <button onClick={analyzeCharts} className="bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold text-xl px-12 py-4 rounded-xl transform hover:scale-105 transition-all">
-                                    Analisar Graficos
-                                </button>
-                            </div>
-                        )}
-
-                        {loading && (
-                            <div className="bg-black/80 rounded-2xl p-12 border-2 border-yellow-400/50 mb-6">
-                                <div className="flex flex-col items-center gap-6">
-                                    <div className="relative w-32 h-32">
-                                        <div className="animate-spin rounded-full h-32 w-32 border-4 border-yellow-400 border-t-transparent"></div>
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <span className="text-yellow-400 text-5xl font-bold">{countdown}</span>
-                                        </div>
-                                    </div>
-                                    <p className="text-yellow-300 text-xl font-semibold">Analisando...</p>
-                                </div>
-                            </div>
-                        )}
-
-                        {analysis && !analysis.error && (
-                            <div className="bg-black/80 rounded-2xl p-8 border-2 border-yellow-400/50 space-y-6">
-                                <h2 className="text-3xl font-bold text-yellow-400 flex items-center gap-3">
-                                    <BarChart3 className="w-8 h-8" />
-                                    Analise Completa
-                                </h2>
-
-                                {timeframeDetect && analysis.timeframe && (
-                                    <div className="bg-blue-900/40 rounded-lg p-4 border-2 border-blue-500">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                            <p className="text-blue-400 text-lg font-semibold">Timeframe Detectado: {analysis.timeframe}</p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className={`rounded-xl p-6 ${analysis.tipo === 'SUPORTE' ? 'bg-green-900/40 border-2 border-green-500' : 'bg-red-900/40 border-2 border-red-500'}`}>
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className="text-white font-bold text-2xl">{analysis.tipo} IDENTIFICADO</span>
-                                        {analysis.tipo === 'SUPORTE' ? <TrendingUp className="w-8 h-8 text-green-400" /> : <TrendingDown className="w-8 h-8 text-red-400" />}
-                                    </div>
-                                    <div className="text-6xl font-bold text-white mb-6">{analysis.valor}</div>
-                                    <div className="flex gap-4 mb-6 flex-wrap">
-                                        <span className="text-yellow-300 text-lg">Probabilidade: <strong className="text-white text-2xl">{analysis.probabilidade}</strong></span>
-                                        <span className={`px-6 py-2 rounded-full font-bold text-lg ${analysis.forca_sinal === 'FORTE' ? 'bg-green-600' : analysis.forca_sinal === 'MODERADA' ? 'bg-yellow-600' : 'bg-orange-600'}`}>
-                                            Forca: {analysis.forca_sinal}
-                                        </span>
-                                    </div>
-                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
-                                        <p className="text-yellow-400 text-sm mb-2">Proximo Alvo</p>
-                                        <p className="text-yellow-400 text-4xl font-bold">{analysis.proximo_alvo}</p>
-                                    </div>
-                                </div>
-
-                                <div className="bg-yellow-900/30 rounded-lg p-6 border-2 border-yellow-500">
-                                    <div className="flex items-start gap-3 mb-4">
-                                        <CheckCircle className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
-                                        <div>
-                                            <p className="text-yellow-400 text-lg font-semibold mb-2">Confirmacao com 2 Fotos</p>
-                                            <p className="text-white leading-relaxed">{analysis.confirmacao_multipla}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {stopLoss && analysis.stop_loss_sugerido && analysis.stop_loss_algoritmos && (
-                                    <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6">
-                                        <div className="flex items-center gap-2 mb-6">
-                                            <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-                                            <span className="text-red-400 text-xl font-semibold">Stop Loss - Protecao para Scalping</span>
-                                        </div>
-                                        <div className="text-white text-5xl font-bold mb-6">{analysis.stop_loss_sugerido}</div>
-                                        <p className="text-red-300 text-sm font-semibold mb-4">6 Algoritmos de Calculo:</p>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
-                                                <p className="text-red-400 text-xs font-semibold mb-2">ATR</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.atr}</p>
-                                            </div>
-                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
-                                                <p className="text-red-400 text-xs font-semibold mb-2">Percentual</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.percentual}</p>
-                                            </div>
-                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
-                                                <p className="text-red-400 text-xs font-semibold mb-2">Suporte/Resist</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.suporte_resistencia}</p>
-                                            </div>
-                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
-                                                <p className="text-red-400 text-xs font-semibold mb-2">Candle Anterior</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.candle_anterior}</p>
-                                            </div>
-                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
-                                                <p className="text-red-400 text-xs font-semibold mb-2">Fibonacci</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.fibonacci}</p>
-                                            </div>
-                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
-                                                <p className="text-red-400 text-xs font-semibold mb-2">Risco/Recomp</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.risco_recompensa}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {takeProfit && analysis.take_profit_sugerido && analysis.take_profit_algoritmos && (
-                                    <div className="bg-green-900/30 border-2 border-green-500 rounded-lg p-6">
-                                        <div className="flex items-center gap-2 mb-6">
-                                            <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                                            <span className="text-green-400 text-xl font-semibold">Take Profit - Saida Rapida</span>
-                                        </div>
-                                        <div className="text-white text-5xl font-bold mb-6">{analysis.take_profit_sugerido}</div>
-                                        <p className="text-green-300 text-sm font-semibold mb-4">6 Algoritmos de Calculo:</p>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
-                                                <p className="text-green-400 text-xs font-semibold mb-2">ATR</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.atr}</p>
-                                            </div>
-                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
-                                                <p className="text-green-400 text-xs font-semibold mb-2">Percentual</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.percentual}</p>
-                                            </div>
-                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
-                                                <p className="text-green-400 text-xs font-semibold mb-2">Suporte/Resist</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.suporte_resistencia}</p>
-                                            </div>
-                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
-                                                <p className="text-green-400 text-xs font-semibold mb-2">Ext Fibonacci</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.extensao_fibonacci}</p>
-                                            </div>
-                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
-                                                <p className="text-green-400 text-xs font-semibold mb-2">Pivot Points</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.pivot_points}</p>
-                                            </div>
-                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
-                                                <p className="text-green-400 text-xs font-semibold mb-2">Risco/Recomp</p>
-                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.risco_recompensa}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
-                                        <p className="text-yellow-400 text-sm mb-2">Preco Atual</p>
-                                        <p className="text-white text-3xl font-bold">{analysis.preco_atual}</p>
-                                    </div>
-                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
-                                        <p className="text-yellow-400 text-sm mb-2">Tendencia</p>
-                                        <p className={`text-3xl font-bold ${analysis.tendencia === 'ALTA' ? 'text-green-400' : analysis.tendencia === 'BAIXA' ? 'text-red-400' : 'text-yellow-400'}`}>
-                                            {analysis.tendencia}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
-                                    <p className="text-yellow-400 text-sm mb-2">Status RSI</p>
-                                    <p className="text-white text-lg font-semibold">{analysis.rsi_status}</p>
-                                </div>
-
-                                {analysis.padroes_identificados && (
-                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
-                                        <p className="text-yellow-400 text-sm mb-3">Padroes Identificados</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {analysis.padroes_identificados.map((p, i) => (
-                                                <span key={i} className="bg-yellow-600/30 text-yellow-200 px-4 py-2 rounded-full text-sm border border-yellow-500/50">{p}</span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
-                                    <p className="text-yellow-400 text-sm mb-2">Analise Tecnica</p>
-                                    <p className="text-white leading-relaxed">{analysis.analise_tecnica}</p>
-                                </div>
-
-                                <div className="bg-yellow-900/30 rounded-lg p-5 border-2 border-yellow-500">
-                                    <p className="text-yellow-400 text-sm font-semibold mb-2">Recomendacao</p>
-                                    <p className="text-white leading-relaxed">{analysis.recomendacao}</p>
-                                </div>
-
-                                <button onClick={() => setAnalysis(null)} className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold py-3 rounded-lg transition-all">
-                                    Nova Analise
-                                </button>
-                            </div>
-                        )}
-
-                        {analysis?.error && (
-                            <div className="bg-red-900/30 rounded-2xl p-6 border border-red-500/50">
-                                <p className="text-red-300 text-center">{analysis.message}</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<SistemaCompleto />);
-    </script>
 </body>
 </html>
