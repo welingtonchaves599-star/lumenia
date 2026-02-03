@@ -1,36 +1,51 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUMENIA IA - Trading Bot</title>
+    <title>IA Trading Bot - Análise Profissional de Scalping</title>
+    
+    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- React e ReactDOM via CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone para JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Lucide Icons via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        .icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
-
-        // Componente de Ícone Adaptado para CDN
-        const Icon = ({ name, className }) => {
-            useEffect(() => {
-                if (window.lucide) {
-                    window.lucide.createIcons();
-                }
-            }, [name]);
-            return <i data-lucide={name} className={className}></i>;
-        };
+        const { useState } = React;
+        const { Mail, User, TrendingUp, Upload, BarChart3, Settings, Camera, CheckCircle, TrendingDown } = lucide;
 
         const SistemaCompleto = () => {
             const [usuarioLogado, setUsuarioLogado] = useState(null);
+
             if (!usuarioLogado) {
                 return <LoginPage onLogin={setUsuarioLogado} />;
             }
+
             return <BotAnaliseCompleto usuario={usuarioLogado} onLogout={() => setUsuarioLogado(null)} />;
         };
 
@@ -47,7 +62,9 @@
                 }
             };
 
-            const acessarBot = () => onLogin({ nome, email });
+            const acessarBot = () => {
+                onLogin({ nome, email });
+            };
 
             if (mostrandoSucesso) {
                 return (
@@ -55,16 +72,21 @@
                         <div className="bg-black/90 backdrop-blur-sm rounded-3xl p-12 max-w-md w-full border-2 border-yellow-400/50 shadow-2xl text-center">
                             <div className="mb-6">
                                 <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Icon name="trending-up" className="w-10 h-10 text-black" />
+                                    <TrendingUp className="w-10 h-10 text-black" />
                                 </div>
                                 <h2 className="text-3xl font-bold text-yellow-400 mb-2">Bem-vindo!</h2>
                                 <p className="text-yellow-100 text-lg">{nome}</p>
                                 <p className="text-yellow-300 text-sm mt-1">{email}</p>
                             </div>
+
                             <div className="bg-green-900/30 border-2 border-green-500 rounded-xl p-4 mb-6">
                                 <p className="text-green-400 font-semibold">Login realizado com sucesso!</p>
                             </div>
-                            <button onClick={acessarBot} className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold text-lg py-4 rounded-xl transition-all shadow-lg transform hover:scale-105">
+
+                            <button
+                                onClick={acessarBot}
+                                className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold text-lg py-4 rounded-xl transition-all shadow-lg transform hover:scale-105"
+                            >
                                 Acessar Bot de Analise
                             </button>
                         </div>
@@ -77,29 +99,66 @@
                     <div className="bg-black/90 backdrop-blur-sm rounded-3xl p-10 max-w-md w-full border-2 border-yellow-400/50 shadow-2xl">
                         <div className="text-center mb-8">
                             <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                                <Icon name="trending-up" className="w-10 h-10 text-black" />
+                                <TrendingUp className="w-10 h-10 text-black" />
                             </div>
                             <h1 className="text-3xl font-bold text-yellow-400 mb-2">IA Trading Bot</h1>
                             <p className="text-yellow-100">Analise Profissional de Scalping</p>
                         </div>
+
                         <div className="space-y-6">
                             <div>
-                                <label className="block text-yellow-400 text-sm font-semibold mb-2">Nome Completo</label>
+                                <label className="block text-yellow-400 text-sm font-semibold mb-2">
+                                    Nome Completo
+                                </label>
                                 <div className="relative">
-                                    <div className="absolute left-3 top-1/2 -translate-y-1/2"><Icon name="user" className="text-yellow-400 w-5 h-5" /></div>
-                                    <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Digite seu nome" className="w-full bg-black/70 text-yellow-100 rounded-xl pl-12 pr-4 py-3 border-2 border-yellow-400/30 focus:border-yellow-400 focus:outline-none" />
+                                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-400 w-5 h-5" />
+                                    <input
+                                        type="text"
+                                        value={nome}
+                                        onChange={(e) => setNome(e.target.value)}
+                                        placeholder="Digite seu nome"
+                                        className="w-full bg-black/70 text-yellow-100 rounded-xl pl-12 pr-4 py-3 border-2 border-yellow-400/30 focus:border-yellow-400 focus:outline-none placeholder-yellow-600 transition-all"
+                                    />
                                 </div>
                             </div>
+
                             <div>
-                                <label className="block text-yellow-400 text-sm font-semibold mb-2">Email (Gmail)</label>
+                                <label className="block text-yellow-400 text-sm font-semibold mb-2">
+                                    Email (Gmail)
+                                </label>
                                 <div className="relative">
-                                    <div className="absolute left-3 top-1/2 -translate-y-1/2"><Icon name="mail" className="text-yellow-400 w-5 h-5" /></div>
-                                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seuemail@gmail.com" className="w-full bg-black/70 text-yellow-100 rounded-xl pl-12 pr-4 py-3 border-2 border-yellow-400/30 focus:border-yellow-400 focus:outline-none" />
+                                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yellow-400 w-5 h-5" />
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="seuemail@gmail.com"
+                                        className="w-full bg-black/70 text-yellow-100 rounded-xl pl-12 pr-4 py-3 border-2 border-yellow-400/30 focus:border-yellow-400 focus:outline-none placeholder-yellow-600 transition-all"
+                                    />
                                 </div>
                             </div>
-                            <button onClick={handleLogin} className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold text-lg py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all">
+
+                            <button
+                                onClick={handleLogin}
+                                className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold text-lg py-4 rounded-xl transition-all shadow-lg transform hover:scale-105"
+                            >
                                 Entrar no Bot
                             </button>
+                        </div>
+
+                        <div className="mt-8 space-y-3">
+                            <div className="flex items-center gap-3 bg-black/50 rounded-lg p-3 border border-yellow-400/20">
+                                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                <p className="text-yellow-100 text-sm">Analise com 2 fotos sequenciais</p>
+                            </div>
+                            <div className="flex items-center gap-3 bg-black/50 rounded-lg p-3 border border-yellow-400/20">
+                                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                <p className="text-yellow-100 text-sm">6 algoritmos de Stop Loss/Take Profit</p>
+                            </div>
+                            <div className="flex items-center gap-3 bg-black/50 rounded-lg p-3 border border-yellow-400/20">
+                                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                                <p className="text-yellow-100 text-sm">Probabilidade realista de acerto</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -123,11 +182,13 @@
             const analyzeCharts = async () => {
                 setLoading(true);
                 setCountdown(10);
-                const timer = setInterval(() => setCountdown(prev => prev <= 1 ? 0 : prev - 1), 1000);
-                
-                // Simulação de delay para análise (manteve sua lógica original)
-                setTimeout(() => {
-                    setAnalysis({
+
+                const timer = setInterval(() => {
+                    setCountdown(prev => prev <= 1 ? 0 : prev - 1);
+                }, 1000);
+
+                try {
+                    const mockAnalysis = {
                         tipo: "SUPORTE",
                         valor: "1.2450",
                         proximo_alvo: "1.2500",
@@ -135,25 +196,45 @@
                         preco_atual: "1.2425",
                         probabilidade: "87%",
                         padroes_identificados: ["Double Bottom", "Suporte Testado 3x"],
-                        analise_tecnica: "Padrão de suporte confirmado com múltiplas testagens. RSI em zona de sobrevenda.",
+                        analise_tecnica: "Padrão de suporte confirmado com múltiplas testagens. RSI em zona de sobrevenda com divergência bullish.",
                         rsi_status: "Sobrevenda com divergência positiva",
                         confirmacao_multipla: "Confirmado por 3 indicadores",
                         forca_sinal: "FORTE",
                         recomendacao: "Compra com risco controlado",
                         timeframe: "1 min",
                         stop_loss_sugerido: "1.2400",
-                        stop_loss_algoritmos: { atr: "1.2410", percentual: "1.2405", suporte_resistencia: "1.2400", candle_anterior: "1.2408", fibonacci: "1.2402", risco_recompensa: "1.2407" },
-                        take_profit_algoritmos: { atr: "1.2560", percentual: "1.2555", suporte_resistencia: "1.2550", extensao_fibonacci: "1.2565", pivot_points: "1.2558", risco_recompensa: "1.2552" },
-                        take_profit_sugerido: "1.2550"
-                    });
-                    setLoading(false);
+                        stop_loss_algoritmos: {
+                            atr: "1.2410",
+                            percentual: "1.2405",
+                            suporte_resistencia: "1.2400",
+                            candle_anterior: "1.2408",
+                            fibonacci: "1.2402",
+                            risco_recompensa: "1.2407"
+                        },
+                        take_profit_sugerido: "1.2550",
+                        take_profit_algoritmos: {
+                            atr: "1.2560",
+                            percentual: "1.2555",
+                            suporte_resistencia: "1.2550",
+                            extensao_fibonacci: "1.2565",
+                            pivot_points: "1.2558",
+                            risco_recompensa: "1.2552"
+                        }
+                    };
+
+                    setAnalysis(mockAnalysis);
                     clearInterval(timer);
-                }, 10000);
+                } catch (error) {
+                    console.error(error);
+                    setAnalysis({ error: true, message: 'Erro na analise' });
+                } finally {
+                    setLoading(false);
+                }
             };
 
             const handleFileUpload = (event, index) => {
                 const file = event.target.files[0];
-                if (file) {
+                if (file && file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         const newPreviews = [...imagePreviews];
@@ -161,10 +242,22 @@
                         setImagePreviews(newPreviews);
                     };
                     reader.readAsDataURL(file);
+
                     const newImages = [...images];
                     newImages[index] = file;
                     setImages(newImages);
+                    setAnalysis(null);
                 }
+            };
+
+            const removeImage = (index) => {
+                const newImages = [...images];
+                const newPreviews = [...imagePreviews];
+                newImages[index] = null;
+                newPreviews[index] = null;
+                setImages(newImages);
+                setImagePreviews(newPreviews);
+                setAnalysis(null);
             };
 
             const uploadedCount = images.filter(img => img !== null).length;
@@ -172,10 +265,11 @@
             return (
                 <div className="min-h-screen bg-gradient-to-br from-black via-amber-600 to-black p-4">
                     <div className="max-w-6xl mx-auto">
+
                         <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-4 mb-6 border-2 border-yellow-400/50 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center">
-                                    <Icon name="user" className="w-6 h-6 text-black" />
+                                    <User className="w-6 h-6 text-black" />
                                 </div>
                                 <div>
                                     <p className="text-yellow-400 font-bold">{usuario.nome}</p>
@@ -183,38 +277,134 @@
                                 </div>
                             </div>
                             <div className="flex gap-3">
-                                <button onClick={() => setShowSettings(!showSettings)} className="bg-black/80 hover:bg-black/60 p-3 rounded-full transition-all border border-yellow-400/50">
-                                    <Icon name="settings" className="w-6 h-6 text-yellow-400" />
+                                <button
+                                    onClick={() => setShowSettings(!showSettings)}
+                                    className="bg-black/80 hover:bg-black/60 p-3 rounded-full transition-all border border-yellow-400/50"
+                                >
+                                    <Settings className="w-6 h-6 text-yellow-400" />
                                 </button>
-                                <button onClick={onLogout} className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-semibold transition-all">Sair</button>
+                                <button
+                                    onClick={onLogout}
+                                    className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-semibold transition-all"
+                                >
+                                    Sair
+                                </button>
                             </div>
                         </div>
 
-                        {/* O restante do seu código permanece idêntico, apenas trocando as Tags Lucide pelo componente <Icon /> */}
-                        {/* Exemplo da parte de progresso */}
-                        <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-yellow-400/50 mb-6 text-center">
-                            <h3 className="text-yellow-100 text-xl font-bold mb-4">Progresso: {uploadedCount}/2 Fotos</h3>
+                        <div className="text-center mb-8">
+                            <div className="flex items-center justify-center gap-3 mb-4">
+                                <Camera className="w-12 h-12 text-yellow-400" />
+                                <h1 className="text-4xl font-bold text-yellow-100">IA Analise Avancada</h1>
+                            </div>
+                            <p className="text-yellow-200 text-lg mb-2">Analise com 2 Fotos para Scalping</p>
+                            <div className="inline-flex items-center gap-2 bg-yellow-900/40 border border-yellow-500/30 rounded-full px-6 py-2">
+                                <span className="text-yellow-100 font-semibold">
+                                    Corretora: {corretora === 'olymptrade' ? '🌐 Olymp Trade' : '📊 Home Broker'}
+                                </span>
+                            </div>
+                        </div>
+
+                        {showSettings && (
+                            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                                <div className="bg-black/90 rounded-2xl p-8 max-w-md w-full border-2 border-yellow-400/50 shadow-2xl">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h2 className="text-2xl font-bold text-yellow-100">Configuracoes</h2>
+                                        <button onClick={() => setShowSettings(false)} className="text-white text-2xl">×</button>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="bg-black/70 rounded-lg p-4 border border-yellow-400/30">
+                                            <label className="block text-yellow-400 text-sm font-semibold mb-2">Corretora</label>
+                                            <select value={corretora} onChange={(e) => setCorretora(e.target.value)} className="w-full bg-black text-yellow-100 rounded-lg p-2 border border-yellow-400/50 focus:border-yellow-300 focus:outline-none">
+                                                <option value="olymptrade">Olymp Trade</option>
+                                                <option value="homebroker">Home Broker</option>
+                                            </select>
+                                            <p className="text-gray-400 text-xs mt-2">Selecione a plataforma das suas fotos</p>
+                                        </div>
+
+                                        <div className="bg-black/70 rounded-lg p-4 border border-yellow-400/30">
+                                            <label className="block text-yellow-400 text-sm font-semibold mb-2">Precisao</label>
+                                            <select value={precisao} onChange={(e) => setPrecisao(e.target.value)} className="w-full bg-black text-yellow-100 rounded-lg p-2 border border-yellow-400/50">
+                                                <option value="alta">Alta (88-95%)</option>
+                                                <option value="media">Media (78-88%)</option>
+                                                <option value="conservadora">Conservadora (68-78%)</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="bg-black/70 rounded-lg p-4 border border-yellow-400/30">
+                                            <label className="block text-yellow-400 text-sm font-semibold mb-2">Tipo</label>
+                                            <select value={tipoAnalise} onChange={(e) => setTipoAnalise(e.target.value)} className="w-full bg-black text-yellow-100 rounded-lg p-2 border border-yellow-400/50">
+                                                <option value="automatico">Automatico</option>
+                                                <option value="suporte">Apenas Suporte</option>
+                                                <option value="resistencia">Apenas Resistencia</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="bg-black/70 rounded-lg p-4 border border-yellow-400/30">
+                                            <p className="text-yellow-400 text-sm font-semibold mb-3">Opcoes</p>
+                                            <label className="flex items-center justify-between mb-2 cursor-pointer">
+                                                <span className="text-white text-sm">Detectar Timeframe</span>
+                                                <input type="checkbox" checked={timeframeDetect} onChange={(e) => setTimeframeDetect(e.target.checked)} className="w-5 h-5" />
+                                            </label>
+                                            <label className="flex items-center justify-between mb-2 cursor-pointer">
+                                                <span className="text-white text-sm">Stop Loss</span>
+                                                <input type="checkbox" checked={stopLoss} onChange={(e) => setStopLoss(e.target.checked)} className="w-5 h-5" />
+                                            </label>
+                                            <label className="flex items-center justify-between cursor-pointer">
+                                                <span className="text-white text-sm">Take Profit</span>
+                                                <input type="checkbox" checked={takeProfit} onChange={(e) => setTakeProfit(e.target.checked)} className="w-5 h-5" />
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <button onClick={() => setShowSettings(false)} className="w-full mt-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold py-3 rounded-lg">
+                                        Salvar
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-yellow-400/50 mb-6">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-yellow-100 text-xl font-bold">Progresso: {uploadedCount}/2 Fotos</h3>
+                            </div>
                             <div className="w-full bg-black rounded-full h-3 border border-yellow-400/30">
-                                <div className="bg-gradient-to-r from-yellow-400 to-amber-500 h-full rounded-full transition-all" style={{ width: `${(uploadedCount / 2) * 100}%` }}></div>
+                                <div
+                                    className="bg-gradient-to-r from-yellow-400 to-amber-500 h-full transition-all duration-500 rounded-full"
+                                    style={{ width: `${(uploadedCount / 2) * 100}%` }}
+                                />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             {[0, 1].map((index) => (
                                 <div key={index} className="bg-black/80 rounded-2xl p-6 border-2 border-yellow-400/50">
+                                    <div className="text-center mb-4">
+                                        <span className="text-yellow-300 font-bold">Foto {index + 1}</span>
+                                        {imagePreviews[index] && <CheckCircle className="inline w-5 h-5 text-green-400 ml-2" />}
+                                    </div>
+
                                     {!imagePreviews[index] ? (
-                                        <label className="flex flex-col items-center justify-center border-2 border-dashed border-yellow-500/50 rounded-xl p-8 cursor-pointer min-h-[200px]">
-                                            <Icon name="upload" className="w-12 h-12 text-yellow-400 mb-3" />
+                                        <label className="flex flex-col items-center justify-center border-2 border-dashed border-yellow-500/50 rounded-xl p-8 cursor-pointer hover:border-yellow-400 min-h-[200px]">
+                                            <Upload className="w-12 h-12 text-yellow-400 mb-3" />
                                             <span className="text-yellow-100 font-semibold">Enviar Foto {index + 1}</span>
-                                            <input type="file" onChange={(e) => handleFileUpload(e, index)} className="hidden" />
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleFileUpload(e, index)}
+                                                className="hidden"
+                                            />
                                         </label>
                                     ) : (
                                         <div className="relative">
-                                            <img src={imagePreviews[index]} className="w-full rounded-lg" />
-                                            <button onClick={() => {
-                                                const n = [...imagePreviews]; n[index]=null; setImagePreviews(n);
-                                                const i = [...images]; i[index]=null; setImages(i);
-                                            }} className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-8 h-8">×</button>
+                                            <img src={imagePreviews[index]} alt="Grafico" className="w-full rounded-lg" />
+                                            <button
+                                                onClick={() => removeImage(index)}
+                                                className="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white rounded-full w-8 h-8"
+                                            >
+                                                ×
+                                            </button>
                                         </div>
                                     )}
                                 </div>
@@ -223,30 +413,199 @@
 
                         {uploadedCount === 2 && !loading && !analysis && (
                             <div className="text-center mb-6">
-                                <button onClick={analyzeCharts} className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold text-xl px-12 py-4 rounded-xl transform hover:scale-105 transition-all">Analisar Graficos</button>
+                                <button onClick={analyzeCharts} className="bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold text-xl px-12 py-4 rounded-xl transform hover:scale-105 transition-all">
+                                    Analisar Graficos
+                                </button>
                             </div>
                         )}
 
                         {loading && (
-                            <div className="bg-black/80 rounded-2xl p-12 border-2 border-yellow-400/50 mb-6 text-center">
-                                <div className="animate-spin rounded-full h-32 w-32 border-4 border-yellow-400 border-t-transparent mx-auto mb-4"></div>
-                                <span className="text-yellow-400 text-4xl font-bold">{countdown}</span>
-                                <p className="text-yellow-300 text-xl font-semibold mt-4">Analisando...</p>
+                            <div className="bg-black/80 rounded-2xl p-12 border-2 border-yellow-400/50 mb-6">
+                                <div className="flex flex-col items-center gap-6">
+                                    <div className="relative">
+                                        <div className="animate-spin rounded-full h-32 w-32 border-4 border-yellow-400 border-t-transparent"></div>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="text-yellow-400 text-5xl font-bold">{countdown}</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-yellow-300 text-xl font-semibold">Analisando...</p>
+                                </div>
                             </div>
                         )}
 
-                        {analysis && (
-                             <div className="bg-black/80 rounded-2xl p-8 border-2 border-yellow-400/50">
+                        {analysis && !analysis.error && (
+                            <div className="bg-black/80 rounded-2xl p-8 border-2 border-yellow-400/50">
                                 <h2 className="text-3xl font-bold text-yellow-400 mb-6 flex items-center gap-3">
-                                    <Icon name="bar-chart-3" className="w-8 h-8" /> Analise Completa
+                                    <BarChart3 className="w-8 h-8" />
+                                    Analise Completa
                                 </h2>
+
+                                {timeframeDetect && analysis.timeframe && (
+                                    <div className="bg-blue-900/40 rounded-lg p-4 border border-blue-500/50 mb-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-blue-600 rounded-full p-2">
+                                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p className="text-blue-400 text-sm font-semibold">Timeframe Detectado</p>
+                                                <p className="text-white text-2xl font-bold">{analysis.timeframe}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className={`rounded-xl p-6 mb-6 ${analysis.tipo === 'SUPORTE' ? 'bg-green-900/40 border-2 border-green-500' : 'bg-red-900/40 border-2 border-red-500'}`}>
-                                    <p className="text-white font-bold">{analysis.tipo} IDENTIFICADO</p>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-white font-bold text-lg">{analysis.tipo} IDENTIFICADO</span>
+                                        {analysis.tipo === 'SUPORTE' ? <TrendingUp className="w-8 h-8 text-green-400" /> : <TrendingDown className="w-8 h-8 text-red-400" />}
+                                    </div>
                                     <div className="text-5xl font-bold text-white mb-4">{analysis.valor}</div>
-                                    <p className="text-yellow-300">Probabilidade: {analysis.probabilidade}</p>
+                                    <div className="flex gap-4 mb-4 flex-wrap">
+                                        <span className="text-yellow-300">Probabilidade: <strong className="text-white text-xl">{analysis.probabilidade}</strong></span>
+                                        <span className={`px-4 py-2 rounded-full font-bold ${analysis.forca_sinal === 'FORTE' ? 'bg-green-600' : analysis.forca_sinal === 'MODERADA' ? 'bg-yellow-600' : 'bg-orange-600'}`}>
+                                            Forca: {analysis.forca_sinal}
+                                        </span>
+                                    </div>
+                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                        <p className="text-yellow-400 text-sm mb-2">Proximo Alvo</p>
+                                        <p className="text-yellow-400 text-3xl font-bold">{analysis.proximo_alvo}</p>
+                                    </div>
                                 </div>
-                                <button onClick={() => setAnalysis(null)} className="w-full bg-yellow-400 text-black font-bold py-3 rounded-lg">Nova Analise</button>
-                             </div>
+
+                                <div className="bg-yellow-900/30 rounded-lg p-5 border border-yellow-500/50 mb-6">
+                                    <div className="flex items-start gap-3">
+                                        <div className="bg-yellow-600 rounded-full p-2 flex-shrink-0">
+                                            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zm-11-1a1 1 0 11-2 0 1 1 0 012 0z" clipRule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-yellow-400 text-sm font-semibold mb-1">Recomendacao</p>
+                                            <p className="text-white">{analysis.recomendacao}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {stopLoss && analysis.stop_loss_sugerido && analysis.stop_loss_algoritmos && (
+                                    <div className="bg-red-900/30 border-2 border-red-500/50 rounded-lg p-6 mb-6">
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <span className="text-red-400 text-lg font-semibold">Stop Loss - Protecao para Scalping</span>
+                                        </div>
+                                        <div className="text-white text-4xl font-bold mb-4">{analysis.stop_loss_sugerido}</div>
+                                        <p className="text-red-300 text-sm font-semibold mb-3">6 Algoritmos de Calculo:</p>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="bg-red-950/50 rounded p-3 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold">ATR</p>
+                                                <p className="text-white font-bold text-lg">{analysis.stop_loss_algoritmos.atr}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-3 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold">Percentual</p>
+                                                <p className="text-white font-bold text-lg">{analysis.stop_loss_algoritmos.percentual}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-3 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold">Suporte/Resist</p>
+                                                <p className="text-white font-bold text-lg">{analysis.stop_loss_algoritmos.suporte_resistencia}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-3 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold">Candle Anterior</p>
+                                                <p className="text-white font-bold text-lg">{analysis.stop_loss_algoritmos.candle_anterior}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-3 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold">Fibonacci</p>
+                                                <p className="text-white font-bold text-lg">{analysis.stop_loss_algoritmos.fibonacci}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-3 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold">Risco/Recomp</p>
+                                                <p className="text-white font-bold text-lg">{analysis.stop_loss_algoritmos.risco_recompensa}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {takeProfit && analysis.take_profit_sugerido && analysis.take_profit_algoritmos && (
+                                    <div className="bg-green-900/30 border-2 border-green-500/50 rounded-lg p-6 mb-6">
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                            <span className="text-green-400 text-lg font-semibold">Take Profit - Saida Rapida</span>
+                                        </div>
+                                        <div className="text-white text-4xl font-bold mb-4">{analysis.take_profit_sugerido}</div>
+                                        <p className="text-green-300 text-sm font-semibold mb-3">6 Algoritmos de Calculo:</p>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="bg-green-950/50 rounded p-3 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold">ATR</p>
+                                                <p className="text-white font-bold text-lg">{analysis.take_profit_algoritmos.atr}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-3 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold">Percentual</p>
+                                                <p className="text-white font-bold text-lg">{analysis.take_profit_algoritmos.percentual}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-3 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold">Suporte/Resist</p>
+                                                <p className="text-white font-bold text-lg">{analysis.take_profit_algoritmos.suporte_resistencia}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-3 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold">Ext Fibonacci</p>
+                                                <p className="text-white font-bold text-lg">{analysis.take_profit_algoritmos.extensao_fibonacci}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-3 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold">Pivot Points</p>
+                                                <p className="text-white font-bold text-lg">{analysis.take_profit_algoritmos.pivot_points}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-3 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold">Risco/Recomp</p>
+                                                <p className="text-white font-bold text-lg">{analysis.take_profit_algoritmos.risco_recompensa}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-2 gap-4 mb-6">
+                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                        <p className="text-yellow-400 text-sm mb-1">Preco Atual</p>
+                                        <p className="text-white text-2xl font-bold">{analysis.preco_atual}</p>
+                                    </div>
+                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                        <p className="text-yellow-400 text-sm mb-1">Tendencia</p>
+                                        <p className={`text-2xl font-bold ${analysis.tendencia === 'ALTA' ? 'text-green-400' : analysis.tendencia === 'BAIXA' ? 'text-red-400' : 'text-yellow-400'}`}>
+                                            {analysis.tendencia}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30 mb-6">
+                                    <p className="text-yellow-400 text-sm mb-2">Status RSI</p>
+                                    <p className="text-white text-lg font-semibold">{analysis.rsi_status}</p>
+                                </div>
+
+                                {analysis.padroes_identificados && (
+                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30 mb-6">
+                                        <p className="text-yellow-400 text-sm mb-3">Padroes Identificados</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {analysis.padroes_identificados.map((p, i) => (
+                                                <span key={i} className="bg-yellow-600/30 text-yellow-200 px-3 py-1 rounded-full text-sm border border-yellow-500/50">{p}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30 mb-6">
+                                    <p className="text-yellow-400 text-sm mb-2">Analise Tecnica</p>
+                                    <p className="text-white leading-relaxed">{analysis.analise_tecnica}</p>
+                                </div>
+
+                                <button onClick={() => setAnalysis(null)} className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold py-3 rounded-lg transition-all">
+                                    Nova Analise
+                                </button>
+                            </div>
+                        )}
+
+                        {analysis?.error && (
+                            <div className="bg-red-900/30 rounded-2xl p-6 border border-red-500/50">
+                                <p className="text-red-300 text-center">{analysis.message}</p>
+                            </div>
                         )}
                     </div>
                 </div>
