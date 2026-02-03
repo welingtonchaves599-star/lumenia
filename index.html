@@ -243,35 +243,35 @@
                 setTimeout(() => {
                     const mockAnalysis = {
                         tipo: "SUPORTE",
-                        valor: "1.2450",
-                        proximo_alvo: "1.2500",
+                        valor: "4332.40",
+                        proximo_alvo: "4333.80",
                         tendencia: "ALTA",
-                        preco_atual: "1.2425",
-                        probabilidade: "87%",
+                        preco_atual: "4332.41",
+                        probabilidade: "72%",
                         padroes_identificados: ["Double Bottom", "Suporte Testado 3x"],
                         analise_tecnica: "Padrão de suporte confirmado com múltiplas testagens. RSI em zona de sobrevenda com divergência bullish.",
                         rsi_status: "Sobrevenda com divergência positiva",
-                        confirmacao_multipla: "Confirmado por 3 indicadores",
-                        forca_sinal: "FORTE",
+                        confirmacao_multipla: "Suporte em 4332.40 sendo testado, RSI mostrando divergência positiva, candles menores indicando indecisão. Falta confirmação de candle de reversão para entrada mais segura.",
+                        forca_sinal: "MODERADA",
                         recomendacao: "Compra com risco controlado",
-                        timeframe: "1 min",
-                        stop_loss_sugerido: "1.2400",
+                        timeframe: "30s",
+                        stop_loss_sugerido: "4331.90",
                         stop_loss_algoritmos: {
-                            atr: "1.2410",
-                            percentual: "1.2405",
-                            suporte_resistencia: "1.2400",
-                            candle_anterior: "1.2408",
-                            fibonacci: "1.2402",
-                            risco_recompensa: "1.2407"
+                            atr: "4331.85",
+                            percentual: "4331.95",
+                            suporte_resistencia: "4331.90",
+                            candle_anterior: "4332.00",
+                            fibonacci: "4331.80",
+                            risco_recompensa: "4331.88"
                         },
-                        take_profit_sugerido: "1.2550",
+                        take_profit_sugerido: "4333.80",
                         take_profit_algoritmos: {
-                            atr: "1.2560",
-                            percentual: "1.2555",
-                            suporte_resistencia: "1.2550",
-                            extensao_fibonacci: "1.2565",
-                            pivot_points: "1.2558",
-                            risco_recompensa: "1.2552"
+                            atr: "4333.95",
+                            percentual: "4333.85",
+                            suporte_resistencia: "4333.80",
+                            extensao_fibonacci: "4334.10",
+                            pivot_points: "4333.75",
+                            risco_recompensa: "4333.90"
                         }
                     };
 
@@ -464,65 +464,171 @@
                         )}
 
                         {analysis && !analysis.error && (
-                            <div className="bg-black/80 rounded-2xl p-8 border-2 border-yellow-400/50 overflow-y-auto max-h-96">
-                                <h2 className="text-3xl font-bold text-yellow-400 mb-6 flex items-center gap-3">
+                            <div className="bg-black/80 rounded-2xl p-8 border-2 border-yellow-400/50 space-y-6">
+                                <h2 className="text-3xl font-bold text-yellow-400 flex items-center gap-3">
                                     <BarChart3 className="w-8 h-8" />
                                     Analise Completa
                                 </h2>
 
                                 {timeframeDetect && analysis.timeframe && (
-                                    <div className="bg-blue-900/40 rounded-lg p-4 border border-blue-500/50 mb-6">
-                                        <p className="text-blue-400 text-sm font-semibold">Timeframe: {analysis.timeframe}</p>
+                                    <div className="bg-blue-900/40 rounded-lg p-4 border-2 border-blue-500">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                            <p className="text-blue-400 text-lg font-semibold">Timeframe Detectado: {analysis.timeframe}</p>
+                                        </div>
                                     </div>
                                 )}
 
-                                <div className={`rounded-xl p-6 mb-6 ${analysis.tipo === 'SUPORTE' ? 'bg-green-900/40 border-2 border-green-500' : 'bg-red-900/40 border-2 border-red-500'}`}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-white font-bold text-lg">{analysis.tipo}</span>
+                                <div className={`rounded-xl p-6 ${analysis.tipo === 'SUPORTE' ? 'bg-green-900/40 border-2 border-green-500' : 'bg-red-900/40 border-2 border-red-500'}`}>
+                                    <div className="flex items-center justify-between mb-4">
+                                        <span className="text-white font-bold text-2xl">{analysis.tipo} IDENTIFICADO</span>
                                         {analysis.tipo === 'SUPORTE' ? <TrendingUp className="w-8 h-8 text-green-400" /> : <TrendingDown className="w-8 h-8 text-red-400" />}
                                     </div>
-                                    <div className="text-5xl font-bold text-white mb-4">{analysis.valor}</div>
-                                    <div className="flex gap-4 mb-4 flex-wrap text-sm">
-                                        <span className="text-yellow-300">Prob: <strong>{analysis.probabilidade}</strong></span>
-                                        <span className={`px-3 py-1 rounded-full font-bold text-xs ${analysis.forca_sinal === 'FORTE' ? 'bg-green-600' : 'bg-yellow-600'}`}>
-                                            {analysis.forca_sinal}
+                                    <div className="text-6xl font-bold text-white mb-6">{analysis.valor}</div>
+                                    <div className="flex gap-4 mb-6 flex-wrap">
+                                        <span className="text-yellow-300 text-lg">Probabilidade: <strong className="text-white text-2xl">{analysis.probabilidade}</strong></span>
+                                        <span className={`px-6 py-2 rounded-full font-bold text-lg ${analysis.forca_sinal === 'FORTE' ? 'bg-green-600' : analysis.forca_sinal === 'MODERADA' ? 'bg-yellow-600' : 'bg-orange-600'}`}>
+                                            Forca: {analysis.forca_sinal}
                                         </span>
+                                    </div>
+                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                        <p className="text-yellow-400 text-sm mb-2">Proximo Alvo</p>
+                                        <p className="text-yellow-400 text-4xl font-bold">{analysis.proximo_alvo}</p>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
-                                    <div className="bg-black/50 rounded-lg p-3 border border-yellow-400/30">
-                                        <p className="text-yellow-400 text-xs mb-1">Preço Atual</p>
-                                        <p className="text-white font-bold">{analysis.preco_atual}</p>
+                                <div className="bg-yellow-900/30 rounded-lg p-6 border-2 border-yellow-500">
+                                    <div className="flex items-start gap-3 mb-4">
+                                        <CheckCircle className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
+                                        <div>
+                                            <p className="text-yellow-400 text-lg font-semibold mb-2">Confirmacao com 2 Fotos</p>
+                                            <p className="text-white leading-relaxed">{analysis.confirmacao_multipla}</p>
+                                        </div>
                                     </div>
-                                    <div className="bg-black/50 rounded-lg p-3 border border-yellow-400/30">
-                                        <p className="text-yellow-400 text-xs mb-1">Tendência</p>
-                                        <p className={`font-bold ${analysis.tendencia === 'ALTA' ? 'text-green-400' : 'text-red-400'}`}>
+                                </div>
+
+                                {stopLoss && analysis.stop_loss_sugerido && analysis.stop_loss_algoritmos && (
+                                    <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6">
+                                        <div className="flex items-center gap-2 mb-6">
+                                            <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                                            <span className="text-red-400 text-xl font-semibold">Stop Loss - Protecao para Scalping</span>
+                                        </div>
+                                        <div className="text-white text-5xl font-bold mb-6">{analysis.stop_loss_sugerido}</div>
+                                        <p className="text-red-300 text-sm font-semibold mb-4">6 Algoritmos de Calculo:</p>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold mb-2">ATR</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.atr}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold mb-2">Percentual</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.percentual}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold mb-2">Suporte/Resist</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.suporte_resistencia}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold mb-2">Candle Anterior</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.candle_anterior}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold mb-2">Fibonacci</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.fibonacci}</p>
+                                            </div>
+                                            <div className="bg-red-950/50 rounded p-4 border border-red-800/30">
+                                                <p className="text-red-400 text-xs font-semibold mb-2">Risco/Recomp</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.stop_loss_algoritmos.risco_recompensa}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {takeProfit && analysis.take_profit_sugerido && analysis.take_profit_algoritmos && (
+                                    <div className="bg-green-900/30 border-2 border-green-500 rounded-lg p-6">
+                                        <div className="flex items-center gap-2 mb-6">
+                                            <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                                            <span className="text-green-400 text-xl font-semibold">Take Profit - Saida Rapida</span>
+                                        </div>
+                                        <div className="text-white text-5xl font-bold mb-6">{analysis.take_profit_sugerido}</div>
+                                        <p className="text-green-300 text-sm font-semibold mb-4">6 Algoritmos de Calculo:</p>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold mb-2">ATR</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.atr}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold mb-2">Percentual</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.percentual}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold mb-2">Suporte/Resist</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.suporte_resistencia}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold mb-2">Ext Fibonacci</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.extensao_fibonacci}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold mb-2">Pivot Points</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.pivot_points}</p>
+                                            </div>
+                                            <div className="bg-green-950/50 rounded p-4 border border-green-800/30">
+                                                <p className="text-green-400 text-xs font-semibold mb-2">Risco/Recomp</p>
+                                                <p className="text-white font-bold text-2xl">{analysis.take_profit_algoritmos.risco_recompensa}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                        <p className="text-yellow-400 text-sm mb-2">Preco Atual</p>
+                                        <p className="text-white text-3xl font-bold">{analysis.preco_atual}</p>
+                                    </div>
+                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                        <p className="text-yellow-400 text-sm mb-2">Tendencia</p>
+                                        <p className={`text-3xl font-bold ${analysis.tendencia === 'ALTA' ? 'text-green-400' : analysis.tendencia === 'BAIXA' ? 'text-red-400' : 'text-yellow-400'}`}>
                                             {analysis.tendencia}
                                         </p>
                                     </div>
                                 </div>
 
-                                {stopLoss && analysis.stop_loss_sugerido && (
-                                    <div className="bg-red-900/30 border border-red-500/50 rounded-lg p-4 mb-4 text-sm">
-                                        <p className="text-red-400 font-semibold mb-2">Stop Loss: {analysis.stop_loss_sugerido}</p>
-                                    </div>
-                                )}
-
-                                {takeProfit && analysis.take_profit_sugerido && (
-                                    <div className="bg-green-900/30 border border-green-500/50 rounded-lg p-4 mb-4 text-sm">
-                                        <p className="text-green-400 font-semibold mb-2">Take Profit: {analysis.take_profit_sugerido}</p>
-                                    </div>
-                                )}
-
-                                <div className="bg-yellow-900/30 rounded-lg p-4 border border-yellow-500/50 mb-4 text-sm">
-                                    <p className="text-yellow-400 font-semibold mb-1">Recomendação</p>
-                                    <p className="text-white">{analysis.recomendacao}</p>
+                                <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                    <p className="text-yellow-400 text-sm mb-2">Status RSI</p>
+                                    <p className="text-white text-lg font-semibold">{analysis.rsi_status}</p>
                                 </div>
 
-                                <button onClick={() => setAnalysis(null)} className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-bold py-2 rounded-lg text-sm">
-                                    Nova Análise
+                                {analysis.padroes_identificados && (
+                                    <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                        <p className="text-yellow-400 text-sm mb-3">Padroes Identificados</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {analysis.padroes_identificados.map((p, i) => (
+                                                <span key={i} className="bg-yellow-600/30 text-yellow-200 px-4 py-2 rounded-full text-sm border border-yellow-500/50">{p}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="bg-black/50 rounded-lg p-4 border border-yellow-400/30">
+                                    <p className="text-yellow-400 text-sm mb-2">Analise Tecnica</p>
+                                    <p className="text-white leading-relaxed">{analysis.analise_tecnica}</p>
+                                </div>
+
+                                <div className="bg-yellow-900/30 rounded-lg p-5 border-2 border-yellow-500">
+                                    <p className="text-yellow-400 text-sm font-semibold mb-2">Recomendacao</p>
+                                    <p className="text-white leading-relaxed">{analysis.recomendacao}</p>
+                                </div>
+
+                                <button onClick={() => setAnalysis(null)} className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black font-bold py-3 rounded-lg transition-all">
+                                    Nova Analise
                                 </button>
+                            </div>
+                        )}
+
+                        {analysis?.error && (
+                            <div className="bg-red-900/30 rounded-2xl p-6 border border-red-500/50">
+                                <p className="text-red-300 text-center">{analysis.message}</p>
                             </div>
                         )}
                     </div>
